@@ -29,10 +29,10 @@ SYSTEM(ecs::SystemOrder::RENDER) RenderScene(WorldRenderer &wr, const Camera &ca
     renderables.clear();
 
     QUERY() gatherSprites([&viewProjection](
-        const Sprite &sprite,
-        const Transform2D &transform,
+        const Sprite& sprite,
+        const Transform2D& transform,
         const int* renderOrder,
-        const vec4 *color)
+        const vec4* color)
     {
         // culling
         vec2 minPos = viewProjection * vec3(transform.position - transform.scale * 0.5f, 1);

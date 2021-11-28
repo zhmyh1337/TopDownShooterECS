@@ -6,6 +6,7 @@
 #include <Engine/Render/Shader/shader.h>
 #include <Engine/transform2d.h>
 #include "textures_pool.h"
+#include "sprites_pool.h"
 #include "sprite_sheets_pool.h"
 #include "camera.h"
 
@@ -13,14 +14,14 @@ static void InitCamera(WorldRenderer &wr, Camera& camera)
 {
     auto resolution = Application::get_context().get_screen_resolution();
     wr.resolution = vec2(resolution.x, resolution.y);
-    auto orthoScale = 1.f / 100.f; // 100 pixel per unit
+    auto orthoScale = 1.f / 100.f; // 100 pixels per unit
     mat3 projectionMatrix(0.f);
     projectionMatrix[0][0] = 1.f / resolution.x;
     projectionMatrix[1][1] = 1.f / resolution.y;
     camera.Init(projectionMatrix, vec3(orthoScale * 1.0f, orthoScale * 2.0f, 1 / 10.f));
 }
 
-static void InitTextures(TexturesPool &tp)
+static void InitTexturesPool(TexturesPool &tp)
 {
     tp.background = new Texture2D(
         project_resources_path("background.jpg"),
@@ -29,15 +30,23 @@ static void InitTextures(TexturesPool &tp)
         TexturePixelFormat::Linear,
         TextureWrappFormat::Repeat,
         true);
+    tp.soldierFeetIdle = new Texture2D(project_resources_path("soldier_feet_idle.png"), TextureColorFormat::RGBA);
+    tp.soldierFeetWalk = new Texture2D(project_resources_path("soldier_feet_walk.png"), TextureColorFormat::RGBA);
     tp.soldierFeetRun = new Texture2D(project_resources_path("soldier_feet_run.png"), TextureColorFormat::RGBA);
 }
 
-static void InitSpriteSheets(const TexturesPool &tp, SpriteSheetsPool& ssp)
+static void InitSpritesPool(const TexturesPool &tp, SpritesPool& sp)
 {
-    ssp.soldierFeetRun = SpriteSheet(tp.soldierFeetRun, get_shader("standard_shader"), 20, 204, 124);
+    sp.soldierFeetIdle = Sprite(tp.soldierFeetIdle, get_shader("standard_shader"));
 }
 
-static void InitEntities(const TexturesPool &tp, const SpriteSheetsPool& ssp)
+static void InitSpriteSheetsPool(const TexturesPool &tp, SpriteSheetsPool& ssp)
+{
+    ssp.soldierFeetWalk = SpriteSheet(tp.soldierFeetWalk, get_shader("standard_shader"), 20);
+    ssp.soldierFeetRun = SpriteSheet(tp.soldierFeetRun, get_shader("standard_shader"), 20);
+}
+
+static void InitEntities(const TexturesPool &tp)
 {
     ecs::create_entity<Sprite, Transform2D, int, ecs::Tag>(
         {"sprite", Sprite(tp.background, get_shader("standard_shader"))},
@@ -46,11 +55,20 @@ static void InitEntities(const TexturesPool &tp, const SpriteSheetsPool& ssp)
         {"background", {}}
     );
 
-    ecs::create_entity<Sprite, size_t, float, Transform2D, ecs::Tag>(
-        {"sprite", ssp.soldierFeetRun.get_sprite(0)},
-        {"spriteIndex", 0},
-        {"lastStepTime", Time::time()},
-        {"transform", Transform2D(vec2{}, vec2(ssp.soldierFeetRun.get_aspect_ratio(), 1.f))},
+    ecs::create_entity<Transform2D, vec2, bool, bool, float, ecs::Tag, ecs::Tag>(
+        {"transform", {}},
+        {"velocity", {}},
+        {"isIdling", true},
+        {"isRunning", false},
+        {"firstStepTime", {}},
+        {"soldier", {}},
+        {"localPlayer", {}}
+    );
+
+    ecs::create_entity<Sprite, Transform2D, ecs::Tag, ecs::Tag>(
+        {"sprite", {}},
+        {"transform", {}},
+        {"soldierPart", {}},
         {"soldierFeet", {}}
     );
 }
@@ -59,13 +77,15 @@ EVENT() InitScene(
     const ecs::OnSceneCreated &event,
     WorldRenderer &wr,
     TexturesPool &tp,
+    SpritesPool& sp,
     SpriteSheetsPool &ssp,
     Camera& camera)
 {
     InitCamera(wr, camera);
-    InitTextures(tp);
-    InitSpriteSheets(tp, ssp);
-    InitEntities(tp, ssp);
+    InitTexturesPool(tp);
+    InitSpritesPool(tp, sp);
+    InitSpriteSheetsPool(tp, ssp);
+    InitEntities(tp);
 
     debug_log("scene %s created", event.scene_name.c_str());
 }

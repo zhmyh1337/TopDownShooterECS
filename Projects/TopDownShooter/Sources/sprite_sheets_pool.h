@@ -5,5 +5,6 @@
 
 struct SpriteSheetsPool : ecs::Singleton
 {
+    SpriteSheet soldierFeetWalk;
     SpriteSheet soldierFeetRun;
 };
