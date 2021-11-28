@@ -1,0 +1,102 @@
+Для работы ecs нужен всего один заголовочный файл
+#include <ecs/ecs.h>
+
+Чтобы задекларировать систему используйте макрос 
+SYSTEM() your_function_name(...)
+Этот макрос разворачивается в просто static inline void. Никакой магии.
+
+Внутри макроса можно указать порядок вызова системы
+ecs::SystemOrder::NO_ORDER
+Дефолтные константы:
+  NO_ORDER = 0
+  LOGIC = 1000
+  RENDER = 2000
+  UI = 3000
+  UIMENU = 4000
+Для более точного задания порядка можно писать так:
+SYSTEM(ecs::SystemOrder::LOGIC-1) func1(...)
+SYSTEM(ecs::SystemOrder::LOGIC) func2(...)
+SYSTEM(ecs::SystemOrder::LOGIC+1) func3(...)
+
+Также в скобках могут быть указаны необходимые компоненты, но без объявления их в параметрах функции. 
+Нужно, чтобы не было варнинга unused variable.
+SYSTEM(bool mainHero) hero_update()
+
+Аргументами систем могут быть как обычные компоненты, так и специальные ecs::Singleton типы, которые упрощают написания кода.
+
+struct SpriteFactory : ecs::Singleton {...};
+
+SYSTEM(bool mainHero) - требуем компонент bool MainHero, но не используем его
+update_hero(
+  int &healthPoints, - получаем компонент по ссылке
+  float damage, - по значению
+  const vec3 &position, - по конст ссылке
+  const vec4 *color, - опциональный компонент. Если у энтити он есть, то указатель будет валидным, иначе нет
+  SpriteFactory &spriteFactory) - ecs::Singleton компонент, храним в нем список спрайтов, чтобы не обращаться к хранилищу текстру каждый раз.
+
+События. 
+Объявляются также как и системы, но только с помощью макроса EVENT()
+EVENT() listen_key_board(const Event &event, ...)
+
+Отличия от систем:
+1) нет приоритета, если событие посылается через ecs::send_event, то выполнено оно будет в начале фрейма.
+2) первым аргументом идет тип обрабатываемого события. Обязательно делать его константной ссылкой(const &)
+
+Квери.
+Макрос QUERY(), варианты использования:
+QUERY() my_query(c++ lambda);
+QUERY() my_query(targetEid, c++ lambda);
+
+Отличия от систем:
+1) нет порядка, так как пишутся внутри функций.
+2) требуются forward declaration, так как само тело квери генерируется кодгеном.  
+  template<typename Callable> void my_query_name(Callable); - для квери по всем энтити
+  template<typename Callable> void my_query_name(const ecs::EntityId&, Callable); - квери для конкретной энтити
+  
+
+ecs API:
+
+
+ecs::create_entity<Type1, Type2, Type3...>({"name1", val1}, {"name2", val2}, {"name3", val3}, ...);
+создание энтити через описание типов ее компонент и списка инициализаторов для компонент, пар из имени и значения.
+возвращает ecs::EntityId;
+
+ecs::destroy_entity(ecs::EntityId eid);
+уничтожает энтити(отложенно)
+
+ecs::send_event<EventType>(event);
+броадкастно посылает ивент типа EventType со значением event. Ивент выполнится отложенно.
+ecs::send_event<EventType>(eid, event);
+юникастно посылает ивент типа EventType со значением event. Ивент выполнится отложенно.
+
+ecs::send_event_immediate<EventType>(event);
+броадкастно посылает ивент типа EventType со значением event. Ивент выполнится незамедлительно.
+ecs::send_event_immediate<EventType>(eid, event);
+юникастно посылает ивент типа EventType со значением event. Ивент выполнится незамедлительно.
+
+
+Зарегестрированные в ecs типы:
+
+базовые типы:
+bool, int, float, double, std::string
+
+вектора и матрицы из библиотеки glm 
+glm::vec2, glm::vec3, glm::vec4
+glm::ivec2, glm::ivec3, glm::ivec4
+glm::mat2, glm::mat3, glm::mat4
+
+ecs типы:
+ecs::EntityId - энтити id, по сути weak pointer, можно копировать и сохранять ссылку на энтити.
+ecs::Tag - структура размера 0, для указания тэга. 
+
+пользовательские структуры:
+
+struct Sprite;
+#include <Engine/Render/sprite.h>
+
+strcut Transform2D
+#include <Engine/transform2d.h>
+
+Регистрация пользовательских типов происходит в .cpp файле с помощью макроса 
+
+REG_TYPE(MyType) см. примеры в #include <Engine/transform2d.h>

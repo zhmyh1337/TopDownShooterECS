@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "name": "Windows",
+            "includePath": [
+                "${workspaceFolder}/Projects/Common/**",
+                "${workspaceFolder}/Projects/TopDownShooter/**"
+            ],
+            "defines": [],
+            "cStandard": "c17",
+            "cppStandard": "c++20"
+        }
+    ],
+    "version": 4
+}

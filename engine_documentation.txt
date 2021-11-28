@@ -1,0 +1,98 @@
+Структура проекта:
+
+Builds/ArcadeSample - исполняемые файлы игры
+Builds/ECSCodeGen - исполняемые файлы кодгена
+Builds/win|unix - сборочные файлы для винды/юникса 
+BuildTool - хранит ninja - эффективная система сборки
+
+
+Projects/Common - код движка
+
+Projects/ECSCodeGen - код кодгена (если нужно его собрать)
+
+Projects/ArcadeSample - директория с ресурсами, кодом и шейдерами игры.
+Projects/ArcadeSample/Resources - ресурсы(текстуры, текстовые файлы и т.д.) Относительно этой папки движок ишет файлы.
+Projects/ArcadeSample/Shaders - шейдеры, есть пример шейдера спрайта на языке glsl, можете добавлять свои
+Projects/ArcadeSample/Sources - код вашей игры
+
+
+Интерфейс движка:
+
+Получить путь до игрового ресурса
+#include <Application/application.h>
+std::string project_resources_path("Pictures/my_picture.png");
+
+Используется математическая библиотека glm, все основные инклюды собраны в 
+#include <3dmath.h>
+А также константы: PI, PIHALF = PI * 0.5f, PITWO = PI * 2.0f, DegToRad = PI / 180.f, RadToDeg = 1.f / DegToRad
+И небольшой набор получения случайных значений
+rand_int(N), rand_float(0, 1), rand_vec2(-1, 1), rand_vec3(0, 100), rand_vec4(-0.5, 0.5)
+
+Для дебажной печати можно использовать функции 
+debug_log(), debug_error()
+Их синтаксис идентичен функции printf, но их вывод показывается в окошке debug самой игры.
+
+В качестве UI используется ImGui. 
+Этот UI полностью задется кодом, поэтому очень удобен для программиста, у которого нет задачи сделать красивый пользовательствий интерфейс. 
+#include <Engine/imgui/imgui.h> 
+Небольшой туториал можно посмотреть здесь https://brokencore.club/threads/6445/
+
+Обработка пользовательского ввода.
+#include <Engine/input.h>
+
+static float get_key(SDL_Keycode keycode);
+Возвращает значение от 0 до 1
+
+static MousePosition get_mouse_position();
+Позиция мыши в экранных координатах
+
+static float get_wheel();
+Прокрутка колесика мышки, возвращает значение в промежутке [-1, 1]
+
+Также можно подписаться на события нажатия клавиш, нажатия, движения мыши, и прокрутку колесика.
+
+EVENT() key_down_event(const KeyDownEvent<SDLK_SPACE> &event)//слушаем нажатие клавиши пробел
+
+EVENT() left_button_click_event(const MouseClickEvent<MouseButton::LeftButton> &event)//слушаем нажатие или отжатие левой кнопки мыши
+
+EVENT() mouse_move_event(const MouseMoveEvent &event)//слушаем движение мыши
+
+EVENT() mouse_wheel_event(const MouseWheelEvent &event)//слушаем прокрутку колесика
+
+Работа со временем
+
+#include <Engine/time.h>
+Time::time() - возвращает текущее время фрейма.
+Time::delta_time() - возвращает разницу между временем текущего время и прошедшего.
+
+2d трансформ
+#include <Engine/tranform2d.h>
+
+struct Transform2D - содержит позицию, размер и поворот в 2d координатах. 
+
+Рендер.
+
+создание текстуры: 
+new Texture2D(project_resources_path("figures.png"), RGBA)
+#include <Engine/Render/Texture/texture.h>
+
+Получение шейдера по его имени:
+get_shader("standart_sprite");
+#include <Engine/Render/Shader/shader.h>
+
+Спрайты. Спрайты нужны для того, чтобы указать какую часть текстуры нужно использовать.
+В сэмпле создается текстура со всеми шахматными фигурами, но затем нарезается на 6 спрайтов, каждый из который содержит только одну фигуру.
+И при отрисовке мы уже используем не только текстуру, но и информацию о подобласти, которую хотим интерпретировать как изображение.
+
+#include <Engine/Render/sprite.h>
+
+Рендер специфичные вещи хранятся в WorldRenderer
+
+#include <Engine/Render/world_render.h>
+
+В нем лежит список текстур, шейдер для отрисовки спрайтов, разрешение экрана, матрица преобразования из экранных координат в мировые.
+
+Методы этого класса 
+Texture2D *add_texture(Texture2D *texture);
+Texture2D *get_texture(const std::string &name);
+vec2 screen_to_world(int x, int y);//функция для перевода из пространства экрана в мировое пространство.
