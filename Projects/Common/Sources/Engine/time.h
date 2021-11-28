@@ -29,9 +29,9 @@ public:
   void update()
   {
     time_point millisecondsNew = std::chrono::high_resolution_clock::now();
-    millisecondDelta = duration_cast<std::chrono::duration<float>>(millisecondsNew - milliseconds);
+    millisecondDelta = millisecondsNew - milliseconds;
     milliseconds = millisecondsNew;
-    seconds = duration_cast<std::chrono::duration<float>>(milliseconds - startTime).count() * 0.001f;
+    seconds = duration_cast<std::chrono::duration<float>>(milliseconds - startTime).count();
     secondDelta = millisecondDelta.count() * 0.001f;
   }
   static float time()

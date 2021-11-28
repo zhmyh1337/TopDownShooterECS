@@ -1,6 +1,29 @@
 #include "camera_update.inl"
 //Code-generator production
 
+void next_sprite_func();
+
+ecs::SystemDescription next_sprite_descr("next_sprite", {
+  {ecs::get_type_description<Sprite>("sprite"), false},
+  {ecs::get_type_description<size_t>("spriteIndex"), false},
+  {ecs::get_type_description<float>("lastStepTime"), false},
+  {ecs::get_type_description<SpriteSheetsPool>("ssp"), false}
+}, next_sprite_func, ecs::SystemOrder::RENDER - 1, (uint)(ecs::SystemTag::Game));
+
+void next_sprite_func()
+{
+  for (ecs::QueryIterator begin = next_sprite_descr.begin(), end = next_sprite_descr.end(); begin != end; ++begin)
+  {
+    next_sprite(
+      *begin.get_component<Sprite>(0),
+      *begin.get_component<size_t>(1),
+      *begin.get_component<float>(2),
+      *begin.get_component<SpriteSheetsPool>(3)
+    );
+  }
+}
+
+
 void move_camera_func();
 
 ecs::SystemDescription move_camera_descr("move_camera", {

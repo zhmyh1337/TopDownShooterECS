@@ -1,6 +1,7 @@
 #pragma once
 #define BASE_TYPES \
 MACRO(int, int)\
+MACRO(size_t, size_t)\
 MACRO(ivec2, glm::ivec2)\
 MACRO(ivec3, glm::ivec3)\
 MACRO(ivec4, glm::ivec4)\

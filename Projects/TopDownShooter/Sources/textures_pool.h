@@ -6,4 +6,5 @@
 struct TexturesPool : ecs::Singleton
 {
     Texture2D* background;
+    Texture2D* soldierFeetRun;
 };
