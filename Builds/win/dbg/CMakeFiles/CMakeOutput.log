@@ -25,45 +25,19 @@ Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" p
 
 The CXX compiler identification is Clang, found in "D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/CMakeFiles/3.22.0-rc3/CompilerIdCXX/a.exe"
 
-Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
-Compiler: C:/Program Files/LLVM/bin/clang.exe 
-Build flags: 
-Id flags:  
-
-The output was:
-0
-
-
-Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.exe"
-
-The C compiler identification is Clang, found in "D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/CMakeFiles/3.22.0-rc3/CompilerIdC/a.exe"
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
-Compiler: C:/Program Files/LLVM/bin/clang++.exe 
-Build flags: 
-Id flags:  
-
-The output was:
-0
-
-
-Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.exe"
-
-The CXX compiler identification is Clang, found in "D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/CMakeFiles/3.22.0-rc3/CompilerIdCXX/a.exe"
-
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~1/Ninja/ninja.exe cmTC_f6e83 && [1/2] Building C object CMakeFiles/cmTC_f6e83.dir/CMakeCCompilerABI.c.obj
-[2/2] Linking C executable cmTC_f6e83.exe
+Run Build Command(s):C:/PROGRA~1/Ninja/ninja.exe cmTC_4bad1 && [1/2] Building C object CMakeFiles/cmTC_4bad1.dir/CMakeCCompilerABI.c.obj
+[2/2] Linking C executable cmTC_4bad1.exe
 
 
 
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~1/Ninja/ninja.exe cmTC_adc1c && [1/2] Building CXX object CMakeFiles/cmTC_adc1c.dir/CMakeCXXCompilerABI.cpp.obj
-[2/2] Linking CXX executable cmTC_adc1c.exe
+Run Build Command(s):C:/PROGRA~1/Ninja/ninja.exe cmTC_b68c6 && [1/2] Building CXX object CMakeFiles/cmTC_b68c6.dir/CMakeCXXCompilerABI.cpp.obj
+[2/2] Linking CXX executable cmTC_b68c6.exe
 
 
 
@@ -72,8 +46,8 @@ Run Build Command(s):C:/PROGRA~1/Ninja/ninja.exe cmTC_adc1c && [1/2] Building CX
 Detecting CXX [-std=c++14] compiler features compiled with the following output:
 Change Dir: D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~1/Ninja/ninja.exe cmTC_062f9 && [1/2] Building CXX object CMakeFiles/cmTC_062f9.dir/feature_tests.cxx.obj
-[2/2] Linking CXX executable cmTC_062f9.exe
+Run Build Command(s):C:/PROGRA~1/Ninja/ninja.exe cmTC_8b3e4 && [1/2] Building CXX object CMakeFiles/cmTC_8b3e4.dir/feature_tests.cxx.obj
+[2/2] Linking CXX executable cmTC_8b3e4.exe
 
 
 
@@ -138,8 +112,8 @@ Run Build Command(s):C:/PROGRA~1/Ninja/ninja.exe cmTC_062f9 && [1/2] Building CX
 Detecting CXX [-std=c++14] compiler features compiled with the following output:
 Change Dir: D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~1/Ninja/ninja.exe cmTC_1f5fc && [1/2] Building CXX object CMakeFiles/cmTC_1f5fc.dir/feature_tests.cxx.obj
-[2/2] Linking CXX executable cmTC_1f5fc.exe
+Run Build Command(s):C:/PROGRA~1/Ninja/ninja.exe cmTC_962cc && [1/2] Building CXX object CMakeFiles/cmTC_962cc.dir/feature_tests.cxx.obj
+[2/2] Linking CXX executable cmTC_962cc.exe
 
 
 
