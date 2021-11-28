@@ -21,6 +21,10 @@ public:
 	GLuint get_shader_program() const;
 	const string& get_name() const;
 
+	int get_id() const
+	{
+		return shaderIdx;
+	}
 	int get_uniform_location(const char *name) const
 	{
 		return glGetUniformLocation(get_shader_program(), name);

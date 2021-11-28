@@ -4,6 +4,7 @@
 ecs::QueryDescription gatherSprites_descr("gatherSprites", {
   {ecs::get_type_description<Sprite>("sprite"), false},
   {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<int>("renderOrder"), true},
   {ecs::get_type_description<vec4>("color"), true}
 });
 
@@ -15,7 +16,8 @@ void gatherSprites(Callable lambda)
     lambda(
       *begin.get_component<Sprite>(0),
       *begin.get_component<Transform2D>(1),
-       begin.get_component<vec4>(2)
+       begin.get_component<int>(2),
+       begin.get_component<vec4>(3)
     );
   }
 }

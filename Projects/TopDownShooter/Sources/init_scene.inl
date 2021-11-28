@@ -39,9 +39,10 @@ static void InitSpriteSheets(const TexturesPool &tp, SpriteSheetsPool& ssp)
 
 static void InitEntities(const TexturesPool &tp, const SpriteSheetsPool& ssp)
 {
-    ecs::create_entity<Sprite, Transform2D, ecs::Tag>(
+    ecs::create_entity<Sprite, Transform2D, int, ecs::Tag>(
         {"sprite", Sprite(tp.background, get_shader("standard_shader"))},
         {"transform", {}},
+        {"renderOrder", -1},
         {"background", {}}
     );
 

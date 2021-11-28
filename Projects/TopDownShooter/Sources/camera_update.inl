@@ -8,7 +8,7 @@
 
 SYSTEM(ecs::SystemOrder::RENDER - 1) next_sprite(Sprite& sprite, size_t& spriteIndex, float& lastStepTime, const SpriteSheetsPool& ssp)
 {
-    size_t delta = std::floor((Time::time() - lastStepTime) * 100);
+    size_t delta = std::floor((Time::time() - lastStepTime) * 50);
     if (delta)
     {
         spriteIndex = (spriteIndex + delta) % ssp.soldierFeetRun.get_count();
