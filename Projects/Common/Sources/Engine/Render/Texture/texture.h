@@ -41,5 +41,6 @@ public:
   void dispose();
   int width() const;
   int height() const;
-  
+  float get_aspect_ratio() const;
+  vec2 get_normalized_scale() const;
 };
