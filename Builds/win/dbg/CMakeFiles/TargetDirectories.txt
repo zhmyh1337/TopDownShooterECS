@@ -1,9 +1,0 @@
-D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/CMakeFiles/Application.dir
-D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/CMakeFiles/edit_cache.dir
-D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/CMakeFiles/rebuild_cache.dir
-D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/Common/CMakeFiles/Engine.dir
-D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/Common/CMakeFiles/edit_cache.dir
-D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/Common/CMakeFiles/rebuild_cache.dir
-D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/TopDownShooter/CMakeFiles/Game.dir
-D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/TopDownShooter/CMakeFiles/edit_cache.dir
-D:/Studying/CG2/HW2/TopDownShooterECS/Builds/win/dbg/TopDownShooter/CMakeFiles/rebuild_cache.dir
