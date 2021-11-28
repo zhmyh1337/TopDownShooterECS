@@ -33,6 +33,11 @@ static void InitTexturesPool(TexturesPool &tp)
     tp.soldierFeetIdle = new Texture2D(project_resources_path("soldier_feet_idle.png"), TextureColorFormat::RGBA);
     tp.soldierFeetWalk = new Texture2D(project_resources_path("soldier_feet_walk.png"), TextureColorFormat::RGBA);
     tp.soldierFeetRun = new Texture2D(project_resources_path("soldier_feet_run.png"), TextureColorFormat::RGBA);
+    tp.soldierRifleIdle = new Texture2D(project_resources_path("soldier_rifle_idle.png"), TextureColorFormat::RGBA);
+    tp.soldierRifleMove = new Texture2D(project_resources_path("soldier_rifle_move.png"), TextureColorFormat::RGBA);
+    tp.soldierRifleReload = new Texture2D(project_resources_path("soldier_rifle_reload.png"), TextureColorFormat::RGBA);
+    tp.soldierRifleMeleeAttack = new Texture2D(project_resources_path("soldier_rifle_meleeattack.png"), TextureColorFormat::RGBA);
+    tp.soldierRifleShoot = new Texture2D(project_resources_path("soldier_rifle_shoot.png"), TextureColorFormat::RGBA);
 }
 
 static void InitSpritesPool(const TexturesPool &tp, SpritesPool& sp)
@@ -44,6 +49,11 @@ static void InitSpriteSheetsPool(const TexturesPool &tp, SpriteSheetsPool& ssp)
 {
     ssp.soldierFeetWalk = SpriteSheet(tp.soldierFeetWalk, get_shader("standard_shader"), 20);
     ssp.soldierFeetRun = SpriteSheet(tp.soldierFeetRun, get_shader("standard_shader"), 20);
+    ssp.soldierRifleIdle = SpriteSheet(tp.soldierRifleIdle, get_shader("standard_shader"), 20);
+    ssp.soldierRifleMove = SpriteSheet(tp.soldierRifleMove, get_shader("standard_shader"), 20);
+    ssp.soldierRifleReload = SpriteSheet(tp.soldierRifleReload, get_shader("standard_shader"), 20);
+    ssp.soldierRifleMeleeAttack = SpriteSheet(tp.soldierRifleMeleeAttack, get_shader("standard_shader"), 15);
+    ssp.soldierRifleShoot = SpriteSheet(tp.soldierRifleShoot, get_shader("standard_shader"), 3);
 }
 
 static void InitEntities(const TexturesPool &tp)
@@ -70,6 +80,13 @@ static void InitEntities(const TexturesPool &tp)
         {"transform", {}},
         {"soldierPart", {}},
         {"soldierFeet", {}}
+    );
+
+    ecs::create_entity<Sprite, Transform2D, ecs::Tag, ecs::Tag>(
+        {"sprite", {}},
+        {"transform", {}},
+        {"soldierPart", {}},
+        {"soldierBody", {}}
     );
 }
 

@@ -7,4 +7,9 @@ struct SpriteSheetsPool : ecs::Singleton
 {
     SpriteSheet soldierFeetWalk;
     SpriteSheet soldierFeetRun;
+    SpriteSheet soldierRifleIdle;
+    SpriteSheet soldierRifleMove;
+    SpriteSheet soldierRifleReload;
+    SpriteSheet soldierRifleMeleeAttack;
+    SpriteSheet soldierRifleShoot;
 };

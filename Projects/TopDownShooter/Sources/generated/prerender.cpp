@@ -20,6 +20,25 @@ void getSoldierFeet(Callable lambda)
 }
 
 
+ecs::QueryDescription getSoldierBody_descr("getSoldierBody", {
+  {ecs::get_type_description<Sprite>("sprite"), false},
+  {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<ecs::Tag>("soldierBody"), false}
+});
+
+template<typename Callable>
+void getSoldierBody(Callable lambda)
+{
+  for (ecs::QueryIterator begin = getSoldierBody_descr.begin(), end = getSoldierBody_descr.end(); begin != end; ++begin)
+  {
+    lambda(
+      *begin.get_component<Sprite>(0),
+      *begin.get_component<Transform2D>(1)
+    );
+  }
+}
+
+
 void UpdateSoldierParts_func();
 
 ecs::SystemDescription UpdateSoldierParts_descr("UpdateSoldierParts", {

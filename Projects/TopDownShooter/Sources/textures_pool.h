@@ -9,4 +9,9 @@ struct TexturesPool : ecs::Singleton
     Texture2D* soldierFeetIdle;
     Texture2D* soldierFeetWalk;
     Texture2D* soldierFeetRun;
+    Texture2D* soldierRifleIdle;
+    Texture2D* soldierRifleMove;
+    Texture2D* soldierRifleReload;
+    Texture2D* soldierRifleMeleeAttack;
+    Texture2D* soldierRifleShoot;
 };
