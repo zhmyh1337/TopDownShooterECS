@@ -1,6 +1,7 @@
 #include <ecs/ecs.h>
 #include <Engine/input.h>
 #include <Engine/time.h>
+#include <Engine/Render/world_renderer.h>
 #include "camera.h"
 
 EVENT() ChangeZoom(const MouseWheelEvent &event, Camera& camera)
@@ -21,7 +22,7 @@ SYSTEM(ecs::SystemOrder::LOGIC, ecs::Tag localPlayer) ProcessLocalPlayerMovement
     auto normalizedVector = directionVector == vec2(0.0f) ? vec2(0.0f) : glm::normalize(directionVector);
     velocity = scalarVelocity * normalizedVector;
     auto wasIdling = isIdling;
-    if (isIdling = velocity == vec2(0.0f))
+    if ((isIdling = velocity == vec2(0.0f)))
     {
         isRunning = false;
     }
@@ -31,9 +32,18 @@ SYSTEM(ecs::SystemOrder::LOGIC, ecs::Tag localPlayer) ProcessLocalPlayerMovement
         {
             firstStepTime = Time::time();
         }
-        if (isRunning = Input::get_key_state(SDLK_LSHIFT))
+        if ((isRunning = Input::get_key_state(SDLK_LSHIFT)))
         {
             velocity *= runningVelocityBoost;
         }
     }
+}
+
+SYSTEM(ecs::SystemOrder::LOGIC, ecs::Tag localPlayer) LocalPlayerViewToMouse(
+    vec2& viewDirection, Transform2D& transform, const WorldRenderer& wr)
+{
+    auto mousePosition = Input::get_mouse_position();
+    auto worldPosition = wr.screen_to_world(mousePosition.x, mousePosition.y);
+    viewDirection = glm::normalize(worldPosition - transform.position);
+    transform.rotation = atan2f(viewDirection.y, viewDirection.x);
 }

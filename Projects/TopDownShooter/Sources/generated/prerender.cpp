@@ -1,6 +1,23 @@
 #include "prerender.inl"
 //Code-generator production
 
+ecs::QueryDescription getDebugCircle_descr("getDebugCircle", {
+  {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<ecs::Tag>("debugCircle"), false}
+});
+
+template<typename Callable>
+void getDebugCircle(Callable lambda)
+{
+  for (ecs::QueryIterator begin = getDebugCircle_descr.begin(), end = getDebugCircle_descr.end(); begin != end; ++begin)
+  {
+    lambda(
+      *begin.get_component<Transform2D>(0)
+    );
+  }
+}
+
+
 ecs::QueryDescription getSoldierFeet_descr("getSoldierFeet", {
   {ecs::get_type_description<Sprite>("sprite"), false},
   {ecs::get_type_description<Transform2D>("transform"), false},

@@ -6,10 +6,10 @@
 class Camera : ecs::Singleton
 {
 public:
-    mat3 projection;
+    mat4 projection;
     vec3 zoom;
     Transform2D transform;
 
-    void Init(mat3 projection, vec3 zoom);
+    void Init(mat4 projection, vec3 zoom);
     void UpdateTransformScale();
 };

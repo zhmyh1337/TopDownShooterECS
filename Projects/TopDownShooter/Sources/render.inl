@@ -35,8 +35,8 @@ SYSTEM(ecs::SystemOrder::RENDER) RenderScene(WorldRenderer &wr, const Camera &ca
         const vec4* color)
     {
         // culling
-        vec2 minPos = viewProjection * vec3(transform.position - transform.scale * 0.5f, 1);
-        vec2 maxPos = viewProjection * vec3(transform.position + transform.scale * 0.5f, 1);
+        vec2 minPos = viewProjection * vec4(transform.position - transform.scale * 0.5f, 1, 1);
+        vec2 maxPos = viewProjection * vec4(transform.position + transform.scale * 0.5f, 1, 1);
         if (1.f < minPos.x || 1.f < minPos.y || maxPos.x < -1.f || maxPos.y < -1.f)
         {
             return;
@@ -64,20 +64,20 @@ SYSTEM(ecs::SystemOrder::RENDER) RenderScene(WorldRenderer &wr, const Camera &ca
         const auto& sprite = renderable.sprite.get();
         const auto& transform = renderable.transform.get();
         const auto& shader = sprite.shader;
-        static int transformViewProjectionUniformLocation;
+        static int mvpUniformLocation;
         static int uvOffsetScaleUniformLocation;
         static int colorUniformLocation;
         if (it == renderables.cbegin() ||
             shader.get_id() != std::prev(it)->sprite.get().shader.get_id())
         {
             shader.use();
-            transformViewProjectionUniformLocation = shader.get_uniform_location("transformViewProjection");
+            mvpUniformLocation = shader.get_uniform_location("mvp");
             uvOffsetScaleUniformLocation = shader.get_uniform_location("uvOffsetScale");
             colorUniformLocation = shader.get_uniform_location("color");
         }
 
         sprite.texture->bind(shader, "sprite", 0);
-        shader.set_mat3x3(transformViewProjectionUniformLocation, viewProjection * transform.get_matrix());
+        shader.set_mat4x4(mvpUniformLocation, viewProjection * transform.get_matrix());
         shader.set_vec4(uvOffsetScaleUniformLocation, vec4(sprite.offset, sprite.scale));
         shader.set_vec4(colorUniformLocation, renderable.color ? *renderable.color : vec4(1.f));
         wr.quadVao.render();

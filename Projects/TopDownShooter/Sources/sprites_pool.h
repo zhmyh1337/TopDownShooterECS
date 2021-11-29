@@ -6,4 +6,5 @@
 struct SpritesPool : ecs::Singleton
 {
     Sprite soldierFeetIdle;
+    Sprite circle;
 };

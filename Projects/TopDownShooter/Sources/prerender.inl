@@ -10,16 +10,24 @@ void getSoldierFeet(Callable);
 template<typename Callable>
 void getSoldierBody(Callable);
 
+template<typename Callable>
+void getDebugCircle(Callable);
+
 SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag soldier) UpdateSoldierParts(
     const Transform2D& transform, bool isIdling, bool isRunning, float firstStepTime,
     const SpritesPool& sp, const SpriteSheetsPool& ssp)
 {
     const Transform2D& soldierTransform = transform;
 
+    QUERY(ecs::Tag debugCircle) getDebugCircle([&](Transform2D& transform) {
+        transform.position = soldierTransform.get_matrix() * vec4(0.7f, -0.5f, 1.0f, 1.0f);
+    });
+
     QUERY(ecs::Tag soldierFeet) getSoldierFeet([&soldierTransform, isIdling, isRunning, firstStepTime, &sp, &ssp](
         Sprite& sprite,
         Transform2D& transform)
     {
+        transform.rotation = soldierTransform.rotation;
         constexpr auto scaleFactor = 0.7f;
         if (isIdling)
         {
@@ -35,14 +43,15 @@ SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag soldier) UpdateSoldierParts(
             sprite = spriteSheet.get_sprite(spriteIndex);
             transform.scale = vec2(spriteSheet.get_aspect_ratio(), 1.0f) * scaleFactor;
         }
-        transform.position = soldierTransform.position - soldierTransform.scale * vec2(0.2f, 0.2f);
+        transform.position = soldierTransform.get_matrix() * vec4(-0.2f, -0.25f, 1.0f, 1.0f);
     });
 
-    QUERY(ecs::Tag soldierBody) getSoldierBody([&soldierTransform, isIdling, isRunning, firstStepTime, &ssp](
+    QUERY(ecs::Tag soldierBody) getSoldierBody([&soldierTransform, isIdling, firstStepTime, &ssp](
         Sprite& sprite,
         Transform2D& transform)
     {
         transform.position = soldierTransform.position;
+        transform.rotation = soldierTransform.rotation;
         const SpriteSheet* spriteSheet = nullptr;
         float indexMultiplier = 10.0f;
         if (isIdling)

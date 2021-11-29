@@ -9,7 +9,7 @@
 class WorldRenderer : ecs::Singleton
 {
 public:
-  mat3 screenToWorld;
+  mat4 screenToWorld;
   ivec2 resolution;
   VertexArrayObject quadVao;
   WorldRenderer();

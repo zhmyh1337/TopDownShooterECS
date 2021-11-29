@@ -9,6 +9,6 @@ WorldRenderer::WorldRenderer()
 
 vec2 WorldRenderer::screen_to_world(int x, int y) const
 {
-  vec3 screenPos(x*2 - resolution.x, resolution.y - y*2, 1);
+  vec4 screenPos(x*2 - resolution.x, resolution.y - y*2, 1, 1);
   return screenToWorld * screenPos;
 }

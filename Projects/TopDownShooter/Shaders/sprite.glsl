@@ -1,6 +1,6 @@
 #shader standard_shader
 
-uniform mat3 transformViewProjection;
+uniform mat4 mvp;
 uniform vec4 uvOffsetScale;
 uniform vec4 color;
 
@@ -14,7 +14,7 @@ void main()
 {
     uv = (Position + vec2(1, 1)) * 0.5;
     uv = uvOffsetScale.xy + uv * uvOffsetScale.zw;
-    gl_Position = vec4(transformViewProjection * vec3(Position, 1), 1);
+    gl_Position = mvp * vec4(Position, 1, 1);
 }
 
 #pixel_shader

@@ -2,7 +2,7 @@
 
 REG_TYPE(Camera)
 
-void Camera::Init(mat3 projection, vec3 zoom)
+void Camera::Init(mat4 projection, vec3 zoom)
 {
     this->projection = projection;
     this->zoom = zoom;

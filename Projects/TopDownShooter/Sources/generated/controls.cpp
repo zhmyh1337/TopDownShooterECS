@@ -25,6 +25,28 @@ void ProcessLocalPlayerMovement_func()
 }
 
 
+void LocalPlayerViewToMouse_func();
+
+ecs::SystemDescription LocalPlayerViewToMouse_descr("LocalPlayerViewToMouse", {
+  {ecs::get_type_description<vec2>("viewDirection"), false},
+  {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<WorldRenderer>("wr"), false},
+  {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
+}, LocalPlayerViewToMouse_func, ecs::SystemOrder::LOGIC, (uint)(ecs::SystemTag::Game));
+
+void LocalPlayerViewToMouse_func()
+{
+  for (ecs::QueryIterator begin = LocalPlayerViewToMouse_descr.begin(), end = LocalPlayerViewToMouse_descr.end(); begin != end; ++begin)
+  {
+    LocalPlayerViewToMouse(
+      *begin.get_component<vec2>(0),
+      *begin.get_component<Transform2D>(1),
+      *begin.get_component<WorldRenderer>(2)
+    );
+  }
+}
+
+
 void ChangeZoom_handler(const MouseWheelEvent &event);
 
 ecs::EventDescription<MouseWheelEvent> ChangeZoom_descr("ChangeZoom", {
