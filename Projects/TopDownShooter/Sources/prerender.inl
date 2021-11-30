@@ -1,6 +1,7 @@
 #include <ecs/ecs.h>
 #include <Engine/transform2d.h>
 #include <Engine/time.h>
+#include "constants.h"
 #include "sprites_pool.h"
 #include "sprite_sheets_pool.h"
 
@@ -19,8 +20,30 @@ SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag soldier) UpdateSoldierParts(
 {
     const Transform2D& soldierTransform = transform;
 
-    QUERY(ecs::Tag debugCircle) getDebugCircle([&](Transform2D& transform) {
-        transform.position = soldierTransform.get_matrix() * vec4(0.7f, -0.5f, 1.0f, 1.0f);
+    vec2 pos0, pos1, pos2;
+    QUERY(ecs::Tag debugCircle) getDebugCircle([&](Transform2D& transform, const int& id) {
+        switch (id)
+        {
+        case 0:
+            transform.position = soldierTransform.get_matrix() * vec4(
+                consts::sprites::soldier_rifle::muzzlePosition, vec2(1));
+            pos0 = transform.position;
+            break;
+
+        case 1:
+            transform.position = soldierTransform.get_matrix() * vec4(
+                consts::sprites::soldier_rifle::shoulderPosition, vec2(1));
+            pos1 = transform.position;
+            break;
+
+        case 2:
+            transform.position = soldierTransform.position;
+            pos2 = transform.position;
+            break;
+
+        default:
+            break;
+        }
     });
 
     QUERY(ecs::Tag soldierFeet) getSoldierFeet([&soldierTransform, isIdling, isRunning, firstStepTime, &sp, &ssp](

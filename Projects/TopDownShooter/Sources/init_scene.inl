@@ -67,13 +67,17 @@ static void InitEntities(const TexturesPool &tp)
         {"background", {}}
     );
 
-    ecs::create_entity<Sprite, Transform2D, vec4, int, ecs::Tag>(
-        {"sprite", Sprite(tp.circle, get_shader("standard_shader"))},
-        {"transform", Transform2D(vec2(), vec2(0.1f))},
-        {"color", vec4(1, 0, 0, 1)},
-        {"renderOrder", 999},
-        {"debugCircle", {}}
-    );
+    for (int i = 0; i < 3; i++)
+    {
+        ecs::create_entity<Sprite, Transform2D, vec4, int, ecs::Tag, int>(
+            {"sprite", Sprite(tp.circle, get_shader("standard_shader"))},
+            {"transform", Transform2D(vec2(), vec2(0.1f))},
+            {"color", vec4(1, 0, 0, 1)},
+            {"renderOrder", 999},
+            {"debugCircle", {}},
+            {"id", i}
+        );
+    }
 
     ecs::create_entity<Transform2D, vec2, vec2, bool, bool, float, ecs::Tag, ecs::Tag>(
         {"transform", {}},

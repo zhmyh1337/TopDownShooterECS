@@ -3,6 +3,7 @@
 
 ecs::QueryDescription getDebugCircle_descr("getDebugCircle", {
   {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<int>("id"), false},
   {ecs::get_type_description<ecs::Tag>("debugCircle"), false}
 });
 
@@ -12,7 +13,8 @@ void getDebugCircle(Callable lambda)
   for (ecs::QueryIterator begin = getDebugCircle_descr.begin(), end = getDebugCircle_descr.end(); begin != end; ++begin)
   {
     lambda(
-      *begin.get_component<Transform2D>(0)
+      *begin.get_component<Transform2D>(0),
+      *begin.get_component<int>(1)
     );
   }
 }

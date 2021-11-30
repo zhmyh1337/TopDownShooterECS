@@ -3,6 +3,7 @@
 #include <Engine/time.h>
 #include <Engine/Render/world_renderer.h>
 #include "camera.h"
+#include "constants.h"
 
 EVENT() ChangeZoom(const MouseWheelEvent &event, Camera& camera)
 {
@@ -42,8 +43,13 @@ SYSTEM(ecs::SystemOrder::LOGIC, ecs::Tag localPlayer) ProcessLocalPlayerMovement
 SYSTEM(ecs::SystemOrder::LOGIC, ecs::Tag localPlayer) LocalPlayerViewToMouse(
     vec2& viewDirection, Transform2D& transform, const WorldRenderer& wr)
 {
-    auto mousePosition = Input::get_mouse_position();
-    auto worldPosition = wr.screen_to_world(mousePosition.x, mousePosition.y);
-    viewDirection = glm::normalize(worldPosition - transform.position);
-    transform.rotation = atan2f(viewDirection.y, viewDirection.x);
+    // spent about four hours doing this maths :)
+    auto mouse = Input::get_mouse_position();
+    auto mouseWorld = wr.screen_to_world(mouse.x, mouse.y);
+    viewDirection = glm::normalize(mouseWorld - transform.position);
+    auto shoulderWorldDistance = glm::length(consts::sprites::soldier_rifle::shoulderPosition * transform.scale);
+    auto mouseWorldDistance = glm::length(mouseWorld - transform.position);
+    auto gammaAngle = std::atan2(viewDirection.y, viewDirection.x);
+    auto betaAngle = glm::acos(glm::clamp(shoulderWorldDistance / mouseWorldDistance, -1.0f, 1.0f));
+    transform.rotation = gammaAngle - betaAngle + PIHALF;
 }
