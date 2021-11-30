@@ -102,6 +102,8 @@ void Input::event_process(const SDL_MouseButtonEvent& event, float time)
     default: return; break;
   }
 
+  mouseButtonMap[button] = action == MouseAction::Down;
+
   ecs::send_event(MouseClickEventAnyEvent{button, action, x, y, time});
 
 
@@ -167,6 +169,11 @@ bool Input::get_key_state_impl(SDL_Keycode keycode)
   return keyMap[keycode].first;
 }
 
+bool Input::get_mouse_button_state_impl(MouseButton mouseButton)
+{
+  return mouseButtonMap[mouseButton];
+}
+
 float Input::get_key(SDL_Keycode keycode, float reaction_time)
 {
   return Input::input().get_key_impl(keycode, reaction_time);
@@ -175,6 +182,11 @@ float Input::get_key(SDL_Keycode keycode, float reaction_time)
 bool Input::get_key_state(SDL_Keycode keycode)
 {
   return Input::input().get_key_state_impl(keycode);
+}
+
+bool Input::get_mouse_button_state(MouseButton mouseButton)
+{
+  return Input::input().get_mouse_button_state_impl(mouseButton);
 }
 
 float Input::get_key_derivative(SDL_Keycode keycode, float reaction_time)

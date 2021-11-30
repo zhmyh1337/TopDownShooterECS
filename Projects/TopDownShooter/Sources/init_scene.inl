@@ -38,12 +38,15 @@ static void InitTexturesPool(TexturesPool &tp)
     tp.soldierRifleReload = new Texture2D(project_resources_path("soldier_rifle_reload.png"), TextureColorFormat::RGBA);
     tp.soldierRifleMeleeAttack = new Texture2D(project_resources_path("soldier_rifle_meleeattack.png"), TextureColorFormat::RGBA);
     tp.soldierRifleShoot = new Texture2D(project_resources_path("soldier_rifle_shoot.png"), TextureColorFormat::RGBA);
+    tp.bullet = new Texture2D(project_resources_path("bullet.png"), TextureColorFormat::RGBA);
     tp.circle = new Texture2D(project_resources_path("circle.png"), TextureColorFormat::RGBA);
 }
 
 static void InitSpritesPool(const TexturesPool &tp, SpritesPool& sp)
 {
+    sp.background = Sprite(tp.background, get_shader("standard_shader"));
     sp.soldierFeetIdle = Sprite(tp.soldierFeetIdle, get_shader("standard_shader"));
+    sp.bullet = Sprite(tp.bullet, get_shader("standard_shader"));
     sp.circle = Sprite(tp.circle, get_shader("standard_shader"));
 }
 
@@ -58,19 +61,20 @@ static void InitSpriteSheetsPool(const TexturesPool &tp, SpriteSheetsPool& ssp)
     ssp.soldierRifleShoot = SpriteSheet(tp.soldierRifleShoot, get_shader("standard_shader"), 3);
 }
 
-static void InitEntities(const TexturesPool &tp)
+static void InitEntities(const SpritesPool &sp)
 {
     ecs::create_entity<Sprite, Transform2D, int, ecs::Tag>(
-        {"sprite", Sprite(tp.background, get_shader("standard_shader"))},
+        {"sprite", sp.background},
         {"transform", {}},
         {"renderOrder", -1},
         {"background", {}}
     );
 
+    /*
     for (int i = 0; i < 3; i++)
     {
         ecs::create_entity<Sprite, Transform2D, vec4, int, ecs::Tag, int>(
-            {"sprite", Sprite(tp.circle, get_shader("standard_shader"))},
+            {"sprite", sp.circle},
             {"transform", Transform2D(vec2(), vec2(0.1f))},
             {"color", vec4(1, 0, 0, 1)},
             {"renderOrder", 999},
@@ -78,14 +82,18 @@ static void InitEntities(const TexturesPool &tp)
             {"id", i}
         );
     }
+    */
 
-    ecs::create_entity<Transform2D, vec2, vec2, bool, bool, float, ecs::Tag, ecs::Tag>(
+    ecs::create_entity<Transform2D, vec2, vec2, bool, bool, float, float, int, bool, ecs::Tag, ecs::Tag>(
         {"transform", {}},
         {"velocity", {}},
         {"viewDirection", {}},
         {"isIdling", true},
         {"isRunning", false},
         {"firstStepTime", {}},
+        {"lastShotTime", {}},
+        {"shootingState", -1},
+        {"canShoot", true},
         {"soldier", {}},
         {"localPlayer", {}}
     );
@@ -117,7 +125,7 @@ EVENT() InitScene(
     InitTexturesPool(tp);
     InitSpritesPool(tp, sp);
     InitSpriteSheetsPool(tp, ssp);
-    InitEntities(tp);
+    InitEntities(sp);
 
     debug_log("scene %s created", event.scene_name.c_str());
 }

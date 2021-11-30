@@ -65,6 +65,7 @@ ecs::SystemDescription UpdateSoldierParts_descr("UpdateSoldierParts", {
   {ecs::get_type_description<bool>("isIdling"), false},
   {ecs::get_type_description<bool>("isRunning"), false},
   {ecs::get_type_description<float>("firstStepTime"), false},
+  {ecs::get_type_description<int>("shootingState"), false},
   {ecs::get_type_description<SpritesPool>("sp"), false},
   {ecs::get_type_description<SpriteSheetsPool>("ssp"), false},
   {ecs::get_type_description<ecs::Tag>("soldier"), false}
@@ -79,8 +80,9 @@ void UpdateSoldierParts_func()
       *begin.get_component<bool>(1),
       *begin.get_component<bool>(2),
       *begin.get_component<float>(3),
-      *begin.get_component<SpritesPool>(4),
-      *begin.get_component<SpriteSheetsPool>(5)
+      *begin.get_component<int>(4),
+      *begin.get_component<SpritesPool>(5),
+      *begin.get_component<SpriteSheetsPool>(6)
     );
   }
 }

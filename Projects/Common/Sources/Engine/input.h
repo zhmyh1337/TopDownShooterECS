@@ -101,6 +101,7 @@ class Input
 {
   MousePosition mousePosition;
   map<SDL_Keycode, pair<int, float>> keyMap;
+  map<MouseButton, bool> mouseButtonMap;
   struct WheelData
   {
     float lastTime = 0, lastValue = 0, targetValue = 0;
@@ -116,10 +117,12 @@ public:
   void event_process(const SDL_MouseWheelEvent& event, float time);
   float get_key_impl(SDL_Keycode keycode, float reaction_time = 0.1f);
   bool get_key_state_impl(SDL_Keycode keycode);
+  bool get_mouse_button_state_impl(MouseButton mouseButton);
   float get_key_derivative(SDL_Keycode keycode, float reaction_time = 0.1f);
   float get_wheel_impl();
   static float get_key(SDL_Keycode keycode, float reaction_time = 0.1f);
   static bool get_key_state(SDL_Keycode keycode);
+  static bool get_mouse_button_state(MouseButton MouseButton);
   static MousePosition get_mouse_position();
   static float get_wheel();
 

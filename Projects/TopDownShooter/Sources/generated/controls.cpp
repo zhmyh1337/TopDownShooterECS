@@ -47,6 +47,34 @@ void LocalPlayerViewToMouse_func()
 }
 
 
+void LocalPlayerShoot_func();
+
+ecs::SystemDescription LocalPlayerShoot_descr("LocalPlayerShoot", {
+  {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<int>("shootingState"), false},
+  {ecs::get_type_description<float>("lastShotTime"), false},
+  {ecs::get_type_description<bool>("canShoot"), false},
+  {ecs::get_type_description<SpritesPool>("sp"), false},
+  {ecs::get_type_description<SpriteSheetsPool>("ssp"), false},
+  {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
+}, LocalPlayerShoot_func, ecs::SystemOrder::LOGIC + 2, (uint)(ecs::SystemTag::Game));
+
+void LocalPlayerShoot_func()
+{
+  for (ecs::QueryIterator begin = LocalPlayerShoot_descr.begin(), end = LocalPlayerShoot_descr.end(); begin != end; ++begin)
+  {
+    LocalPlayerShoot(
+      *begin.get_component<Transform2D>(0),
+      *begin.get_component<int>(1),
+      *begin.get_component<float>(2),
+      *begin.get_component<bool>(3),
+      *begin.get_component<SpritesPool>(4),
+      *begin.get_component<SpriteSheetsPool>(5)
+    );
+  }
+}
+
+
 void ChangeZoom_handler(const MouseWheelEvent &event);
 
 ecs::EventDescription<MouseWheelEvent> ChangeZoom_descr("ChangeZoom", {

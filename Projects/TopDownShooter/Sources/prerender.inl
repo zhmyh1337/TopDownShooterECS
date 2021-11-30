@@ -15,7 +15,7 @@ template<typename Callable>
 void getDebugCircle(Callable);
 
 SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag soldier) UpdateSoldierParts(
-    const Transform2D& transform, bool isIdling, bool isRunning, float firstStepTime,
+    const Transform2D& transform, bool isIdling, bool isRunning, float firstStepTime, int shootingState,
     const SpritesPool& sp, const SpriteSheetsPool& ssp)
 {
     const Transform2D& soldierTransform = transform;
@@ -69,12 +69,21 @@ SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag soldier) UpdateSoldierParts(
         transform.position = soldierTransform.get_matrix() * vec4(-0.2f, -0.25f, 1.0f, 1.0f);
     });
 
-    QUERY(ecs::Tag soldierBody) getSoldierBody([&soldierTransform, isIdling, firstStepTime, &ssp](
+    QUERY(ecs::Tag soldierBody) getSoldierBody([&soldierTransform, isIdling, firstStepTime, shootingState, &ssp](
         Sprite& sprite,
         Transform2D& transform)
     {
         transform.position = soldierTransform.position;
         transform.rotation = soldierTransform.rotation;
+
+        if (shootingState != -1)
+        {
+            const SpriteSheet& spriteSheet = ssp.soldierRifleShoot;
+            sprite = spriteSheet.get_sprite(static_cast<size_t>(shootingState));
+            transform.scale = vec2(spriteSheet.get_aspect_ratio(), 1.0f);
+            return;
+        }
+
         const SpriteSheet* spriteSheet = nullptr;
         float indexMultiplier = 10.0f;
         if (isIdling)
