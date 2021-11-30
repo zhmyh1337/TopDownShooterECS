@@ -38,6 +38,9 @@ static void InitTexturesPool(TexturesPool &tp)
     tp.soldierRifleReload = new Texture2D(project_resources_path("soldier_rifle_reload.png"), TextureColorFormat::RGBA);
     tp.soldierRifleMeleeAttack = new Texture2D(project_resources_path("soldier_rifle_meleeattack.png"), TextureColorFormat::RGBA);
     tp.soldierRifleShoot = new Texture2D(project_resources_path("soldier_rifle_shoot.png"), TextureColorFormat::RGBA);
+    tp.zombieIdle = new Texture2D(project_resources_path("zombie_idle.png"), TextureColorFormat::RGBA);
+    tp.zombieMove = new Texture2D(project_resources_path("zombie_move.png"), TextureColorFormat::RGBA);
+    tp.zombieAttack = new Texture2D(project_resources_path("zombie_attack.png"), TextureColorFormat::RGBA);
     tp.bullet = new Texture2D(project_resources_path("bullet.png"), TextureColorFormat::RGBA);
     tp.circle = new Texture2D(project_resources_path("circle.png"), TextureColorFormat::RGBA);
 }
@@ -59,6 +62,9 @@ static void InitSpriteSheetsPool(const TexturesPool &tp, SpriteSheetsPool& ssp)
     ssp.soldierRifleReload = SpriteSheet(tp.soldierRifleReload, get_shader("standard_shader"), 20);
     ssp.soldierRifleMeleeAttack = SpriteSheet(tp.soldierRifleMeleeAttack, get_shader("standard_shader"), 15);
     ssp.soldierRifleShoot = SpriteSheet(tp.soldierRifleShoot, get_shader("standard_shader"), 3);
+    ssp.zombieIdle = SpriteSheet(tp.zombieIdle, get_shader("standard_shader"), 17);
+    ssp.zombieMove = SpriteSheet(tp.zombieMove, get_shader("standard_shader"), 17);
+    ssp.zombieAttack = SpriteSheet(tp.zombieAttack, get_shader("standard_shader"), 9);
 }
 
 static void InitEntities(const SpritesPool &sp)

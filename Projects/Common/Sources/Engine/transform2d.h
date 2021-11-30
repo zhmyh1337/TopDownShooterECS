@@ -10,4 +10,6 @@ struct Transform2D
     position(position), scale(scale), rotation(rotation)
   {}
   mat4 get_matrix() const;
+  float get_diameter() const;
+  float get_radius() const;
 };

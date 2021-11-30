@@ -1,0 +1,21 @@
+#include "ui.inl"
+//Code-generator production
+
+void ShowKillStat_func();
+
+ecs::SystemDescription ShowKillStat_descr("ShowKillStat", {
+  {ecs::get_type_description<GameData>("gameData"), false}
+}, ShowKillStat_func, ecs::SystemOrder::UI, (uint)(ecs::SystemTag::Game));
+
+void ShowKillStat_func()
+{
+  for (ecs::QueryIterator begin = ShowKillStat_descr.begin(), end = ShowKillStat_descr.end(); begin != end; ++begin)
+  {
+    ShowKillStat(
+      *begin.get_component<GameData>(0)
+    );
+  }
+}
+
+
+

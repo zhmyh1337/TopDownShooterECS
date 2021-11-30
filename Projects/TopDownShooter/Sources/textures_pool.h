@@ -14,6 +14,9 @@ struct TexturesPool : ecs::Singleton
     Texture2D* soldierRifleReload;
     Texture2D* soldierRifleMeleeAttack;
     Texture2D* soldierRifleShoot;
+    Texture2D* zombieIdle;
+    Texture2D* zombieMove;
+    Texture2D* zombieAttack;
     Texture2D* bullet;
     Texture2D* circle;
 };

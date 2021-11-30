@@ -88,4 +88,24 @@ void UpdateSoldierParts_func()
 }
 
 
+void UpdateEnemySprite_func();
+
+ecs::SystemDescription UpdateEnemySprite_descr("UpdateEnemySprite", {
+  {ecs::get_type_description<Sprite>("sprite"), false},
+  {ecs::get_type_description<SpriteSheetsPool>("ssp"), false},
+  {ecs::get_type_description<ecs::Tag>("enemy"), false}
+}, UpdateEnemySprite_func, ecs::SystemOrder::RENDER - 1, (uint)(ecs::SystemTag::Game));
+
+void UpdateEnemySprite_func()
+{
+  for (ecs::QueryIterator begin = UpdateEnemySprite_descr.begin(), end = UpdateEnemySprite_descr.end(); begin != end; ++begin)
+  {
+    UpdateEnemySprite(
+      *begin.get_component<Sprite>(0),
+      *begin.get_component<SpriteSheetsPool>(1)
+    );
+  }
+}
+
+
 

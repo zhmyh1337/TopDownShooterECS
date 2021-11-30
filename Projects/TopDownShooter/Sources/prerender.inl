@@ -61,7 +61,7 @@ SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag soldier) UpdateSoldierParts(
         {
             const auto& spriteSheet = isRunning ? ssp.soldierFeetRun : ssp.soldierFeetWalk;
             constexpr auto indexMultiplier = 25.0f;
-            auto spriteIndex = static_cast<size_t>(std::floor((Time::time() - firstStepTime) * indexMultiplier))
+            const auto spriteIndex = static_cast<size_t>(std::floor((Time::time() - firstStepTime) * indexMultiplier))
                 % spriteSheet.get_count();
             sprite = spriteSheet.get_sprite(spriteIndex);
             transform.scale = vec2(spriteSheet.get_aspect_ratio(), 1.0f) * scaleFactor;
@@ -98,9 +98,16 @@ SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag soldier) UpdateSoldierParts(
         }
 
         const auto spriteIndexDeltaTime = isIdling ? Time::time() : Time::time() - firstStepTime;
-        auto spriteIndex = static_cast<size_t>(std::floor(spriteIndexDeltaTime * indexMultiplier))
+        const auto spriteIndex = static_cast<size_t>(std::floor(spriteIndexDeltaTime * indexMultiplier))
             % spriteSheet->get_count();
         sprite = spriteSheet->get_sprite(spriteIndex);
         transform.scale = vec2(spriteSheet->get_aspect_ratio(), 1.0f);
     });
+}
+
+SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag enemy) UpdateEnemySprite(Sprite& sprite, const SpriteSheetsPool& ssp)
+{
+    const float indexMultiplier = 10.0f;
+    const auto spriteIndex = static_cast<size_t>(std::floor(Time::time() * indexMultiplier)) % ssp.zombieMove.get_count();
+    sprite = ssp.zombieMove.get_sprite(spriteIndex);
 }

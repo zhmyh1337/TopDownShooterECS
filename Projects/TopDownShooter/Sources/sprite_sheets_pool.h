@@ -12,4 +12,7 @@ struct SpriteSheetsPool : ecs::Singleton
     SpriteSheet soldierRifleReload;
     SpriteSheet soldierRifleMeleeAttack;
     SpriteSheet soldierRifleShoot;
+    SpriteSheet zombieIdle;
+    SpriteSheet zombieMove;
+    SpriteSheet zombieAttack; 
 };

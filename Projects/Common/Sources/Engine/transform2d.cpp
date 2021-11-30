@@ -11,3 +11,13 @@ mat4 Transform2D::get_matrix() const
   result = glm::scale(result, glm::vec3(scale, 1.0f));
   return result;
 }
+
+float Transform2D::get_diameter() const
+{
+  return glm::length(scale);
+}
+
+float Transform2D::get_radius() const
+{
+  return get_diameter() / 2;
+}
