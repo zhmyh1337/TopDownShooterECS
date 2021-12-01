@@ -76,6 +76,12 @@ static void InitEntities(const SpritesPool &sp)
         {"background", {}}
     );
 
+    ecs::create_entity<Sprite, Transform2D, int>(
+        {"sprite", Sprite(nullptr, get_shader("quad_shader"))},
+        {"transform", {}},
+        {"renderOrder", 9}
+    );
+
     /*
     for (int i = 0; i < 3; i++)
     {
@@ -83,7 +89,7 @@ static void InitEntities(const SpritesPool &sp)
             {"sprite", sp.circle},
             {"transform", Transform2D(vec2(), vec2(0.1f))},
             {"color", vec4(1, 0, 0, 1)},
-            {"renderOrder", 999},
+            {"renderOrder", 1},
             {"debugCircle", {}},
             {"id", i}
         );

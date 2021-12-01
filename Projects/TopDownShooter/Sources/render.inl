@@ -42,15 +42,17 @@ SYSTEM(ecs::SystemOrder::RENDER) RenderScene(WorldRenderer &wr, const Camera &ca
             return;
         }
 
-        if (sprite.texture)
+        if (!sprite.texture)
         {
-            renderables.push_back({
-                .sprite = std::cref(sprite),
-                .transform = std::cref(transform),
-                .renderOrder = renderOrder ? *renderOrder : 0,
-                .color = color
-            });
+            return;
         }
+
+        renderables.push_back({
+            .sprite = std::cref(sprite),
+            .transform = std::cref(transform),
+            .renderOrder = renderOrder ? *renderOrder : 0,
+            .color = color
+        });
     });
 
     std::stable_sort(renderables.begin(), renderables.end(), [](const Renderable& lhs, const Renderable& rhs) {
@@ -64,6 +66,7 @@ SYSTEM(ecs::SystemOrder::RENDER) RenderScene(WorldRenderer &wr, const Camera &ca
         const auto& sprite = renderable.sprite.get();
         const auto& transform = renderable.transform.get();
         const auto& shader = sprite.shader;
+        /* const bool isSpriteShader = sprite.texture != nullptr; */
         static int mvpUniformLocation;
         static int uvOffsetScaleUniformLocation;
         static int colorUniformLocation;
@@ -72,14 +75,35 @@ SYSTEM(ecs::SystemOrder::RENDER) RenderScene(WorldRenderer &wr, const Camera &ca
         {
             shader.use();
             mvpUniformLocation = shader.get_uniform_location("mvp");
-            uvOffsetScaleUniformLocation = shader.get_uniform_location("uvOffsetScale");
             colorUniformLocation = shader.get_uniform_location("color");
+            /* if (isSpriteShader) */
+            {
+                uvOffsetScaleUniformLocation = shader.get_uniform_location("uvOffsetScale");
+            }
         }
 
-        sprite.texture->bind(shader, "sprite", 0);
         shader.set_mat4x4(mvpUniformLocation, viewProjection * transform.get_matrix());
-        shader.set_vec4(uvOffsetScaleUniformLocation, vec4(sprite.offset, sprite.scale));
         shader.set_vec4(colorUniformLocation, renderable.color ? *renderable.color : vec4(1.f));
+        /* if (isSpriteShader) */
+        {
+            shader.set_vec4(uvOffsetScaleUniformLocation, vec4(sprite.offset, sprite.scale));
+            sprite.texture->bind(shader, "sprite", 0);
+        }
+        wr.quadVao.render();
+    }
+
+    {
+        // healthbar
+        const auto shader = get_shader("healthbar_shader");
+        static Transform2D transform(vec2(1.0f - 0.2f - 0.01f, -0.915f), vec2(0.2f, 0.025f));
+        static auto transformMatrix = transform.get_matrix();
+        constexpr auto borderThicknessYRatio = 0.1f;
+        shader.use();
+        shader.set_float(shader.get_uniform_location("health"), 1.0f);
+        shader.set_mat4x4(shader.get_uniform_location("transform"), transformMatrix);
+        shader.set_vec4(shader.get_uniform_location("backgroundColor"), vec4(vec3(0), 1));
+        shader.set_vec2(shader.get_uniform_location("borderThickness"),
+            borderThicknessYRatio * vec2(transform.scale.y / transform.scale.x * wr.resolution.y / wr.resolution.x, 1));
         wr.quadVao.render();
     }
 

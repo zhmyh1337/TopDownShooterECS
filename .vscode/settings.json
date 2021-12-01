@@ -106,7 +106,7 @@
 },
 "launchOption.currentConfig": {
   "Project": "TopDownShooter",
-  "BuildType": "rel"
+  "BuildType": "dbg"
 },
 "cmake.configureOnOpen": false,
 }

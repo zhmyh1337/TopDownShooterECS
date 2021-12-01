@@ -1,14 +1,13 @@
 #shader standard_shader
 
-uniform mat4 mvp;
-uniform vec4 uvOffsetScale;
-uniform vec4 color;
-
 #vertex_shader
 
 layout(location = 0)in vec2 Position;
 
 out vec2 uv;
+
+uniform mat4 mvp;
+uniform vec4 uvOffsetScale;
 
 void main() 
 {
@@ -23,6 +22,7 @@ in vec2 uv;
 out vec4 outColor;
 
 uniform sampler2D sprite;
+uniform vec4 color;
 
 void main()
 {
