@@ -6,7 +6,7 @@ SYSTEM(ecs::SystemOrder::UI) ShowKillStat(const GameData& gameData)
 {
     if (ImGui::Begin("Score"))
     {
-        ImGui::Text("%d kills", gameData.killsCount);
+        ImGui::Text("%zu kills", gameData.killsCount);
         ImGui::End();
     }
 }
