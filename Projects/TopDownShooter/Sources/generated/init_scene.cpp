@@ -4,11 +4,9 @@
 void InitScene_handler(const ecs::OnSceneCreated &event);
 
 ecs::EventDescription<ecs::OnSceneCreated> InitScene_descr("InitScene", {
-  {ecs::get_type_description<WorldRenderer>("wr"), false},
   {ecs::get_type_description<TexturesPool>("tp"), false},
   {ecs::get_type_description<SpritesPool>("sp"), false},
-  {ecs::get_type_description<SpriteSheetsPool>("ssp"), false},
-  {ecs::get_type_description<Camera>("camera"), false}
+  {ecs::get_type_description<SpriteSheetsPool>("ssp"), false}
 }, InitScene_handler, (uint)(ecs::SystemTag::Game));
 
 void InitScene_handler(const ecs::OnSceneCreated &event)
@@ -17,11 +15,9 @@ void InitScene_handler(const ecs::OnSceneCreated &event)
   {
     InitScene(
       event,
-      *begin.get_component<WorldRenderer>(0),
-      *begin.get_component<TexturesPool>(1),
-      *begin.get_component<SpritesPool>(2),
-      *begin.get_component<SpriteSheetsPool>(3),
-      *begin.get_component<Camera>(4)
+      *begin.get_component<TexturesPool>(0),
+      *begin.get_component<SpritesPool>(1),
+      *begin.get_component<SpriteSheetsPool>(2)
     );
   }
 }
@@ -30,22 +26,18 @@ void InitScene_handler(const ecs::OnSceneCreated &event)
 void InitScene_singl_handler(const ecs::OnSceneCreated &event, ecs::QueryIterator &begin);
 
 ecs::SingleEventDescription<ecs::OnSceneCreated> InitScene_singl_descr("InitScene", {
-  {ecs::get_type_description<WorldRenderer>("wr"), false},
   {ecs::get_type_description<TexturesPool>("tp"), false},
   {ecs::get_type_description<SpritesPool>("sp"), false},
-  {ecs::get_type_description<SpriteSheetsPool>("ssp"), false},
-  {ecs::get_type_description<Camera>("camera"), false}
+  {ecs::get_type_description<SpriteSheetsPool>("ssp"), false}
 }, InitScene_singl_handler, (uint)(ecs::SystemTag::Game));
 
 void InitScene_singl_handler(const ecs::OnSceneCreated &event, ecs::QueryIterator &begin)
 {
   InitScene(
     event,
-      *begin.get_component<WorldRenderer>(0),
-      *begin.get_component<TexturesPool>(1),
-      *begin.get_component<SpritesPool>(2),
-      *begin.get_component<SpriteSheetsPool>(3),
-      *begin.get_component<Camera>(4)
+      *begin.get_component<TexturesPool>(0),
+      *begin.get_component<SpritesPool>(1),
+      *begin.get_component<SpriteSheetsPool>(2)
   );
 }
 

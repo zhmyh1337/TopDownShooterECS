@@ -15,7 +15,8 @@ template<typename Callable>
 void getDebugCircle(Callable);
 
 SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag soldier) UpdateSoldierParts(
-    const Transform2D& transform, bool isIdling, bool isRunning, float firstStepTime, int shootingState,
+    const Transform2D& transform, float lastDamageReceivedTime,
+    bool isIdling, bool isRunning, float firstStepTime, int shootingState,
     const SpritesPool& sp, const SpriteSheetsPool& ssp)
 {
     const Transform2D& soldierTransform = transform;
@@ -46,10 +47,17 @@ SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag soldier) UpdateSoldierParts(
         }
     });
 
-    QUERY(ecs::Tag soldierFeet) getSoldierFeet([&soldierTransform, isIdling, isRunning, firstStepTime, &sp, &ssp](
+    const auto colorBlueGreenChannel = glm::clamp(Time::time() - lastDamageReceivedTime, 0.0f, 1.0f);
+    const auto colorFilter = vec4(1, colorBlueGreenChannel, colorBlueGreenChannel, 1);
+
+    QUERY(ecs::Tag soldierFeet) getSoldierFeet(
+        [&soldierTransform, isIdling, isRunning, firstStepTime, &sp, &ssp, &colorFilter](
         Sprite& sprite,
+        vec4& color,
         Transform2D& transform)
     {
+        color = colorFilter;
+
         transform.rotation = soldierTransform.rotation;
         constexpr auto scaleFactor = 0.7f;
         if (isIdling)
@@ -69,10 +77,14 @@ SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag soldier) UpdateSoldierParts(
         transform.position = soldierTransform.get_matrix() * vec4(-0.2f, -0.25f, 1.0f, 1.0f);
     });
 
-    QUERY(ecs::Tag soldierBody) getSoldierBody([&soldierTransform, isIdling, firstStepTime, shootingState, &ssp](
+    QUERY(ecs::Tag soldierBody) getSoldierBody(
+        [&soldierTransform, isIdling, firstStepTime, shootingState, &ssp, &colorFilter](
         Sprite& sprite,
+        vec4& color,
         Transform2D& transform)
     {
+        color = colorFilter;
+
         transform.position = soldierTransform.position;
         transform.rotation = soldierTransform.rotation;
 
@@ -105,9 +117,18 @@ SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag soldier) UpdateSoldierParts(
     });
 }
 
-SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag enemy) UpdateEnemySprite(Sprite& sprite, const SpriteSheetsPool& ssp)
+SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag enemy) UpdateEnemySprite(
+    Sprite& sprite, const vec2& velocity, const SpriteSheetsPool& ssp, int attackState)
 {
-    const float indexMultiplier = 10.0f;
-    const auto spriteIndex = static_cast<size_t>(std::floor(Time::time() * indexMultiplier)) % ssp.zombieMove.get_count();
-    sprite = ssp.zombieMove.get_sprite(spriteIndex);
+    if (attackState != -1)
+    {
+        sprite = ssp.zombieAttack.get_sprite(static_cast<size_t>(attackState));
+        return;
+    }
+
+    constexpr auto indexMultiplier = 10.0f;
+    const auto isIdling = velocity == glm::vec2(0);
+    const auto& spriteSheet = isIdling ? ssp.zombieIdle : ssp.zombieMove;
+    const auto spriteIndex = static_cast<size_t>(std::floor(Time::time() * indexMultiplier)) % spriteSheet.get_count();
+    sprite = spriteSheet.get_sprite(spriteIndex);
 }

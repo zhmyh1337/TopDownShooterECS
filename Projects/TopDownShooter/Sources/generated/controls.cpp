@@ -8,6 +8,7 @@ ecs::SystemDescription ProcessLocalPlayerMovement_descr("ProcessLocalPlayerMovem
   {ecs::get_type_description<bool>("isIdling"), false},
   {ecs::get_type_description<bool>("isRunning"), false},
   {ecs::get_type_description<float>("firstStepTime"), false},
+  {ecs::get_type_description<GameData>("gameData"), false},
   {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
 }, ProcessLocalPlayerMovement_func, ecs::SystemOrder::LOGIC, (uint)(ecs::SystemTag::Game));
 
@@ -19,7 +20,8 @@ void ProcessLocalPlayerMovement_func()
       *begin.get_component<vec2>(0),
       *begin.get_component<bool>(1),
       *begin.get_component<bool>(2),
-      *begin.get_component<float>(3)
+      *begin.get_component<float>(3),
+      *begin.get_component<GameData>(4)
     );
   }
 }
@@ -31,6 +33,7 @@ ecs::SystemDescription LocalPlayerViewToMouse_descr("LocalPlayerViewToMouse", {
   {ecs::get_type_description<vec2>("viewDirection"), false},
   {ecs::get_type_description<Transform2D>("transform"), false},
   {ecs::get_type_description<WorldRenderer>("wr"), false},
+  {ecs::get_type_description<GameData>("gameData"), false},
   {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
 }, LocalPlayerViewToMouse_func, ecs::SystemOrder::LOGIC, (uint)(ecs::SystemTag::Game));
 
@@ -41,7 +44,8 @@ void LocalPlayerViewToMouse_func()
     LocalPlayerViewToMouse(
       *begin.get_component<vec2>(0),
       *begin.get_component<Transform2D>(1),
-      *begin.get_component<WorldRenderer>(2)
+      *begin.get_component<WorldRenderer>(2),
+      *begin.get_component<GameData>(3)
     );
   }
 }
@@ -56,6 +60,7 @@ ecs::SystemDescription LocalPlayerShoot_descr("LocalPlayerShoot", {
   {ecs::get_type_description<bool>("canShoot"), false},
   {ecs::get_type_description<SpritesPool>("sp"), false},
   {ecs::get_type_description<SpriteSheetsPool>("ssp"), false},
+  {ecs::get_type_description<GameData>("gameData"), false},
   {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
 }, LocalPlayerShoot_func, ecs::SystemOrder::LOGIC + 2, (uint)(ecs::SystemTag::Game));
 
@@ -69,7 +74,8 @@ void LocalPlayerShoot_func()
       *begin.get_component<float>(2),
       *begin.get_component<bool>(3),
       *begin.get_component<SpritesPool>(4),
-      *begin.get_component<SpriteSheetsPool>(5)
+      *begin.get_component<SpriteSheetsPool>(5),
+      *begin.get_component<GameData>(6)
     );
   }
 }

@@ -5,6 +5,7 @@ ecs::QueryDescription gatherEnemies_descr("gatherEnemies", {
   {ecs::get_type_description<Transform2D>("transform"), false},
   {ecs::get_type_description<vec2>("velocity"), false},
   {ecs::get_type_description<vec2>("viewDirection"), false},
+  {ecs::get_type_description<vec2>("roamingDestination"), false},
   {ecs::get_type_description<ecs::Tag>("enemy"), false}
 });
 
@@ -16,7 +17,50 @@ void gatherEnemies(Callable lambda)
     lambda(
       *begin.get_component<Transform2D>(0),
       *begin.get_component<vec2>(1),
-      *begin.get_component<vec2>(2)
+      *begin.get_component<vec2>(2),
+      *begin.get_component<vec2>(3)
+    );
+  }
+}
+
+
+ecs::QueryDescription gatherLeavingEnemies_descr("gatherLeavingEnemies", {
+  {ecs::get_type_description<vec2>("roamingDestination"), false},
+  {ecs::get_type_description<int>("attackState"), false},
+  {ecs::get_type_description<ecs::Tag>("enemy"), false}
+});
+
+template<typename Callable>
+void gatherLeavingEnemies(Callable lambda)
+{
+  for (ecs::QueryIterator begin = gatherLeavingEnemies_descr.begin(), end = gatherLeavingEnemies_descr.end(); begin != end; ++begin)
+  {
+    lambda(
+      *begin.get_component<vec2>(0),
+      *begin.get_component<int>(1)
+    );
+  }
+}
+
+
+ecs::QueryDescription gatherAttackingEnemies_descr("gatherAttackingEnemies", {
+  {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<float>("lastAttackTime"), false},
+  {ecs::get_type_description<int>("attackState"), false},
+  {ecs::get_type_description<bool>("canDamage"), false},
+  {ecs::get_type_description<ecs::Tag>("enemy"), false}
+});
+
+template<typename Callable>
+void gatherAttackingEnemies(Callable lambda)
+{
+  for (ecs::QueryIterator begin = gatherAttackingEnemies_descr.begin(), end = gatherAttackingEnemies_descr.end(); begin != end; ++begin)
+  {
+    lambda(
+      *begin.get_component<Transform2D>(0),
+      *begin.get_component<float>(1),
+      *begin.get_component<int>(2),
+      *begin.get_component<bool>(3)
     );
   }
 }
@@ -45,6 +89,7 @@ void DirectEnemies_func();
 
 ecs::SystemDescription DirectEnemies_descr("DirectEnemies", {
   {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<GameData>("gameData"), false},
   {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
 }, DirectEnemies_func, ecs::SystemOrder::LOGIC - 1, (uint)(ecs::SystemTag::Game));
 
@@ -53,7 +98,8 @@ void DirectEnemies_func()
   for (ecs::QueryIterator begin = DirectEnemies_descr.begin(), end = DirectEnemies_descr.end(); begin != end; ++begin)
   {
     DirectEnemies(
-      *begin.get_component<Transform2D>(0)
+      *begin.get_component<Transform2D>(0),
+      *begin.get_component<GameData>(1)
     );
   }
 }
@@ -76,6 +122,110 @@ void DestroyOldBullets_func()
       *begin.get_component<float>(1)
     );
   }
+}
+
+
+void EnemiesAttack_func();
+
+ecs::SystemDescription EnemiesAttack_descr("EnemiesAttack", {
+  {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<SpriteSheetsPool>("ssp"), false},
+  {ecs::get_type_description<GameData>("gameData"), false},
+  {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
+}, EnemiesAttack_func, ecs::SystemOrder::LOGIC + 2, (uint)(ecs::SystemTag::Game));
+
+void EnemiesAttack_func()
+{
+  for (ecs::QueryIterator begin = EnemiesAttack_descr.begin(), end = EnemiesAttack_descr.end(); begin != end; ++begin)
+  {
+    EnemiesAttack(
+      *begin.get_component<Transform2D>(0),
+      *begin.get_component<SpriteSheetsPool>(1),
+      *begin.get_component<GameData>(2)
+    );
+  }
+}
+
+
+void GameOver_handler(const GameOverEvent &event);
+
+ecs::EventDescription<GameOverEvent> GameOver_descr("GameOver", {
+  {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<GameData>("gameData"), false},
+  {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
+}, GameOver_handler, (uint)(ecs::SystemTag::Game));
+
+void GameOver_handler(const GameOverEvent &event)
+{
+  for (ecs::QueryIterator begin = GameOver_descr.begin(), end = GameOver_descr.end(); begin != end; ++begin)
+  {
+    GameOver(
+      event,
+      *begin.get_component<Transform2D>(0),
+      *begin.get_component<GameData>(1)
+    );
+  }
+}
+
+
+void LocalPlayerReceiveDamage_handler(const LocalPlayerReceiveDamageEvent &event);
+
+ecs::EventDescription<LocalPlayerReceiveDamageEvent> LocalPlayerReceiveDamage_descr("LocalPlayerReceiveDamage", {
+  {ecs::get_type_description<float>("health"), false},
+  {ecs::get_type_description<float>("lastDamageReceivedTime"), false},
+  {ecs::get_type_description<GameData>("gameData"), false},
+  {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
+}, LocalPlayerReceiveDamage_handler, (uint)(ecs::SystemTag::Game));
+
+void LocalPlayerReceiveDamage_handler(const LocalPlayerReceiveDamageEvent &event)
+{
+  for (ecs::QueryIterator begin = LocalPlayerReceiveDamage_descr.begin(), end = LocalPlayerReceiveDamage_descr.end(); begin != end; ++begin)
+  {
+    LocalPlayerReceiveDamage(
+      event,
+      *begin.get_component<float>(0),
+      *begin.get_component<float>(1),
+      *begin.get_component<GameData>(2)
+    );
+  }
+}
+
+
+void GameOver_singl_handler(const GameOverEvent &event, ecs::QueryIterator &begin);
+
+ecs::SingleEventDescription<GameOverEvent> GameOver_singl_descr("GameOver", {
+  {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<GameData>("gameData"), false},
+  {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
+}, GameOver_singl_handler, (uint)(ecs::SystemTag::Game));
+
+void GameOver_singl_handler(const GameOverEvent &event, ecs::QueryIterator &begin)
+{
+  GameOver(
+    event,
+      *begin.get_component<Transform2D>(0),
+      *begin.get_component<GameData>(1)
+  );
+}
+
+
+void LocalPlayerReceiveDamage_singl_handler(const LocalPlayerReceiveDamageEvent &event, ecs::QueryIterator &begin);
+
+ecs::SingleEventDescription<LocalPlayerReceiveDamageEvent> LocalPlayerReceiveDamage_singl_descr("LocalPlayerReceiveDamage", {
+  {ecs::get_type_description<float>("health"), false},
+  {ecs::get_type_description<float>("lastDamageReceivedTime"), false},
+  {ecs::get_type_description<GameData>("gameData"), false},
+  {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
+}, LocalPlayerReceiveDamage_singl_handler, (uint)(ecs::SystemTag::Game));
+
+void LocalPlayerReceiveDamage_singl_handler(const LocalPlayerReceiveDamageEvent &event, ecs::QueryIterator &begin)
+{
+  LocalPlayerReceiveDamage(
+    event,
+      *begin.get_component<float>(0),
+      *begin.get_component<float>(1),
+      *begin.get_component<GameData>(2)
+  );
 }
 
 

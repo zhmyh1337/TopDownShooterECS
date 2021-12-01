@@ -8,6 +8,9 @@
 template<typename Callable>
 void gatherSprites(Callable);
 
+template<typename Callable>
+void getLocalPlayer(Callable);
+
 SYSTEM(ecs::SystemOrder::RENDER) RenderScene(WorldRenderer &wr, const Camera &camera)
 {
     auto viewProjection = camera.projection * glm::inverse(camera.transform.get_matrix());
@@ -99,7 +102,10 @@ SYSTEM(ecs::SystemOrder::RENDER) RenderScene(WorldRenderer &wr, const Camera &ca
         static auto transformMatrix = transform.get_matrix();
         constexpr auto borderThicknessYRatio = 0.1f;
         shader.use();
-        shader.set_float(shader.get_uniform_location("health"), 1.0f);
+        QUERY(ecs::Tag localPlayer) getLocalPlayer([&shader](float health)
+        {
+            shader.set_float(shader.get_uniform_location("health"), glm::clamp(health, 0.0f, 1.0f));
+        });
         shader.set_mat4x4(shader.get_uniform_location("transform"), transformMatrix);
         shader.set_vec4(shader.get_uniform_location("backgroundColor"), vec4(vec3(0), 1));
         shader.set_vec2(shader.get_uniform_location("borderThickness"),

@@ -22,6 +22,7 @@ void getDebugCircle(Callable lambda)
 
 ecs::QueryDescription getSoldierFeet_descr("getSoldierFeet", {
   {ecs::get_type_description<Sprite>("sprite"), false},
+  {ecs::get_type_description<vec4>("color"), false},
   {ecs::get_type_description<Transform2D>("transform"), false},
   {ecs::get_type_description<ecs::Tag>("soldierFeet"), false}
 });
@@ -33,7 +34,8 @@ void getSoldierFeet(Callable lambda)
   {
     lambda(
       *begin.get_component<Sprite>(0),
-      *begin.get_component<Transform2D>(1)
+      *begin.get_component<vec4>(1),
+      *begin.get_component<Transform2D>(2)
     );
   }
 }
@@ -41,6 +43,7 @@ void getSoldierFeet(Callable lambda)
 
 ecs::QueryDescription getSoldierBody_descr("getSoldierBody", {
   {ecs::get_type_description<Sprite>("sprite"), false},
+  {ecs::get_type_description<vec4>("color"), false},
   {ecs::get_type_description<Transform2D>("transform"), false},
   {ecs::get_type_description<ecs::Tag>("soldierBody"), false}
 });
@@ -52,7 +55,8 @@ void getSoldierBody(Callable lambda)
   {
     lambda(
       *begin.get_component<Sprite>(0),
-      *begin.get_component<Transform2D>(1)
+      *begin.get_component<vec4>(1),
+      *begin.get_component<Transform2D>(2)
     );
   }
 }
@@ -62,6 +66,7 @@ void UpdateSoldierParts_func();
 
 ecs::SystemDescription UpdateSoldierParts_descr("UpdateSoldierParts", {
   {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<float>("lastDamageReceivedTime"), false},
   {ecs::get_type_description<bool>("isIdling"), false},
   {ecs::get_type_description<bool>("isRunning"), false},
   {ecs::get_type_description<float>("firstStepTime"), false},
@@ -77,12 +82,13 @@ void UpdateSoldierParts_func()
   {
     UpdateSoldierParts(
       *begin.get_component<Transform2D>(0),
-      *begin.get_component<bool>(1),
+      *begin.get_component<float>(1),
       *begin.get_component<bool>(2),
-      *begin.get_component<float>(3),
-      *begin.get_component<int>(4),
-      *begin.get_component<SpritesPool>(5),
-      *begin.get_component<SpriteSheetsPool>(6)
+      *begin.get_component<bool>(3),
+      *begin.get_component<float>(4),
+      *begin.get_component<int>(5),
+      *begin.get_component<SpritesPool>(6),
+      *begin.get_component<SpriteSheetsPool>(7)
     );
   }
 }
@@ -92,7 +98,9 @@ void UpdateEnemySprite_func();
 
 ecs::SystemDescription UpdateEnemySprite_descr("UpdateEnemySprite", {
   {ecs::get_type_description<Sprite>("sprite"), false},
+  {ecs::get_type_description<vec2>("velocity"), false},
   {ecs::get_type_description<SpriteSheetsPool>("ssp"), false},
+  {ecs::get_type_description<int>("attackState"), false},
   {ecs::get_type_description<ecs::Tag>("enemy"), false}
 }, UpdateEnemySprite_func, ecs::SystemOrder::RENDER - 1, (uint)(ecs::SystemTag::Game));
 
@@ -102,7 +110,9 @@ void UpdateEnemySprite_func()
   {
     UpdateEnemySprite(
       *begin.get_component<Sprite>(0),
-      *begin.get_component<SpriteSheetsPool>(1)
+      *begin.get_component<vec2>(1),
+      *begin.get_component<SpriteSheetsPool>(2),
+      *begin.get_component<int>(3)
     );
   }
 }

@@ -6,6 +6,7 @@
 #include "constants.h"
 #include "sprites_pool.h"
 #include "sprite_sheets_pool.h"
+#include "game_data.h"
 
 EVENT() ChangeZoom(const MouseWheelEvent &event, Camera& camera)
 {
@@ -14,10 +15,15 @@ EVENT() ChangeZoom(const MouseWheelEvent &event, Camera& camera)
 }
 
 SYSTEM(ecs::SystemOrder::LOGIC, ecs::Tag localPlayer) ProcessLocalPlayerMovement(
-    vec2& velocity, bool& isIdling, bool& isRunning, float& firstStepTime)
+    vec2& velocity, bool& isIdling, bool& isRunning, float& firstStepTime, const GameData& gameData)
 {
-    constexpr auto scalarVelocity = 2.5f;
-    constexpr auto runningVelocityBoost = 1.75f;
+    if (gameData.isGameOver)
+    {
+        return;
+    }
+
+    constexpr auto scalarVelocity = 3.0f;
+    constexpr auto runningVelocityBoost = 2.0f;
     
     auto directionVector = vec2(
         Input::get_key_state(SDLK_d) - Input::get_key_state(SDLK_a),
@@ -43,8 +49,13 @@ SYSTEM(ecs::SystemOrder::LOGIC, ecs::Tag localPlayer) ProcessLocalPlayerMovement
 }
 
 SYSTEM(ecs::SystemOrder::LOGIC, ecs::Tag localPlayer) LocalPlayerViewToMouse(
-    vec2& viewDirection, Transform2D& transform, const WorldRenderer& wr)
+    vec2& viewDirection, Transform2D& transform, const WorldRenderer& wr, const GameData& gameData)
 {
+    if (gameData.isGameOver)
+    {
+        return;
+    }
+
     // spent about four hours doing this maths :)
     auto mouse = Input::get_mouse_position();
     auto mouseWorld = wr.screen_to_world(mouse.x, mouse.y);
@@ -58,13 +69,18 @@ SYSTEM(ecs::SystemOrder::LOGIC, ecs::Tag localPlayer) LocalPlayerViewToMouse(
 
 SYSTEM(ecs::SystemOrder::LOGIC + 2, ecs::Tag localPlayer) LocalPlayerShoot(
     const Transform2D& transform, int& shootingState, float& lastShotTime, bool& canShoot,
-    const SpritesPool& sp, const SpriteSheetsPool& ssp)
+    const SpritesPool& sp, const SpriteSheetsPool& ssp, const GameData& gameData)
 {
+    if (gameData.isGameOver)
+    {
+        return;
+    }
+
     if (shootingState != -1)
     {
         const auto deltaTime = Time::time() - lastShotTime;
         shootingState = static_cast<int>(std::floor(
-            deltaTime / consts::sprites::soldier_rifle::timePerShootFrame * ssp.soldierRifleShoot.get_count()));
+            deltaTime / consts::sprites::soldier_rifle::timePerShootFrame));
         if (shootingState >= static_cast<int>(ssp.soldierRifleShoot.get_count()))
         {
             shootingState = -1;

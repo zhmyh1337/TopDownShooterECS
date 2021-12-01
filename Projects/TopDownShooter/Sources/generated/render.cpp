@@ -23,6 +23,23 @@ void gatherSprites(Callable lambda)
 }
 
 
+ecs::QueryDescription gatherLocalPlayer_descr("getLocalPlayer", {
+  {ecs::get_type_description<float>("health"), false},
+  {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
+});
+
+template<typename Callable>
+void getLocalPlayer(Callable lambda)
+{
+  for (ecs::QueryIterator begin = gatherLocalPlayer_descr.begin(), end = gatherLocalPlayer_descr.end(); begin != end; ++begin)
+  {
+    lambda(
+      *begin.get_component<float>(0)
+    );
+  }
+}
+
+
 void RenderScene_func();
 
 ecs::SystemDescription RenderScene_descr("RenderScene", {
