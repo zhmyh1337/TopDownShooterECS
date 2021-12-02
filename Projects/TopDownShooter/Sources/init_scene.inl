@@ -29,6 +29,7 @@ static void InitTexturesPool(TexturesPool &tp)
     tp.zombieMove = new Texture2D(project_resources_path("zombie_move.png"), TextureColorFormat::RGBA);
     tp.zombieAttack = new Texture2D(project_resources_path("zombie_attack.png"), TextureColorFormat::RGBA);
     tp.bullet = new Texture2D(project_resources_path("bullet.png"), TextureColorFormat::RGBA);
+    tp.blood = new Texture2D(project_resources_path("blood.png"), TextureColorFormat::RGBA);
     tp.circle = new Texture2D(project_resources_path("circle.png"), TextureColorFormat::RGBA);
 }
 
@@ -52,6 +53,7 @@ static void InitSpriteSheetsPool(const TexturesPool &tp, SpriteSheetsPool& ssp)
     ssp.zombieIdle = SpriteSheet(tp.zombieIdle, get_shader("standard_shader"), 17);
     ssp.zombieMove = SpriteSheet(tp.zombieMove, get_shader("standard_shader"), 17);
     ssp.zombieAttack = SpriteSheet(tp.zombieAttack, get_shader("standard_shader"), 9);
+    ssp.blood = SpriteSheet(tp.blood, get_shader("standard_shader"), 4);
 }
 
 EVENT() InitScene(

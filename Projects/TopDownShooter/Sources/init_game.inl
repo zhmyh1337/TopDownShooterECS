@@ -26,7 +26,7 @@ static void InitEntities(const SpritesPool &sp)
     ecs::create_entity<Sprite, Transform2D, int, ecs::Tag>(
         {"sprite", sp.background},
         {"transform", {}},
-        {"renderOrder", -1},
+        {"renderOrder", -9},
         {"background", {}}
     );
 

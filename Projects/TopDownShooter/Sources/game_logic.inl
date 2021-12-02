@@ -108,9 +108,12 @@ void gatherLeavingEnemies(Callable);
 
 struct GameOverEvent {};
 
-EVENT(ecs::Tag localPlayer) GameOver(const GameOverEvent& event, const Transform2D& transform, GameData& gameData)
+EVENT(ecs::Tag localPlayer) GameOver(const GameOverEvent& event, bool& isIdling, vec2& velocity, const Transform2D& transform, GameData& gameData)
 {
     gameData.isGameOver = true;
+
+    isIdling = true;
+    velocity = vec2(0);
 
     const auto& localPlayerTransform = transform;
     QUERY(ecs::Tag enemy) gatherLeavingEnemies([&localPlayerTransform](vec2& roamingDestination, int& attackState)

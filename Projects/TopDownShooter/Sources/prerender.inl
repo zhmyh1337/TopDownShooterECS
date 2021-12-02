@@ -126,7 +126,7 @@ SYSTEM(ecs::SystemOrder::RENDER - 1, ecs::Tag enemy) UpdateEnemySprite(
         return;
     }
 
-    constexpr auto indexMultiplier = 10.0f;
+    constexpr auto indexMultiplier = 15.0f;
     const auto isIdling = velocity == glm::vec2(0);
     const auto& spriteSheet = isIdling ? ssp.zombieIdle : ssp.zombieMove;
     const auto spriteIndex = static_cast<size_t>(std::floor(Time::time() * indexMultiplier)) % spriteSheet.get_count();

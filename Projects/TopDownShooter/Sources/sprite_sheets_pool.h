@@ -15,4 +15,5 @@ struct SpriteSheetsPool : ecs::Singleton
     SpriteSheet zombieIdle;
     SpriteSheet zombieMove;
     SpriteSheet zombieAttack; 
+    SpriteSheet blood; 
 };

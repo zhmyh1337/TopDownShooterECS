@@ -18,5 +18,6 @@ struct TexturesPool : ecs::Singleton
     Texture2D* zombieMove;
     Texture2D* zombieAttack;
     Texture2D* bullet;
+    Texture2D* blood;
     Texture2D* circle;
 };

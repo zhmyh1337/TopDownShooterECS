@@ -150,6 +150,8 @@ void EnemiesAttack_func()
 void GameOver_handler(const GameOverEvent &event);
 
 ecs::EventDescription<GameOverEvent> GameOver_descr("GameOver", {
+  {ecs::get_type_description<bool>("isIdling"), false},
+  {ecs::get_type_description<vec2>("velocity"), false},
   {ecs::get_type_description<Transform2D>("transform"), false},
   {ecs::get_type_description<GameData>("gameData"), false},
   {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
@@ -161,8 +163,10 @@ void GameOver_handler(const GameOverEvent &event)
   {
     GameOver(
       event,
-      *begin.get_component<Transform2D>(0),
-      *begin.get_component<GameData>(1)
+      *begin.get_component<bool>(0),
+      *begin.get_component<vec2>(1),
+      *begin.get_component<Transform2D>(2),
+      *begin.get_component<GameData>(3)
     );
   }
 }
@@ -194,6 +198,8 @@ void LocalPlayerReceiveDamage_handler(const LocalPlayerReceiveDamageEvent &event
 void GameOver_singl_handler(const GameOverEvent &event, ecs::QueryIterator &begin);
 
 ecs::SingleEventDescription<GameOverEvent> GameOver_singl_descr("GameOver", {
+  {ecs::get_type_description<bool>("isIdling"), false},
+  {ecs::get_type_description<vec2>("velocity"), false},
   {ecs::get_type_description<Transform2D>("transform"), false},
   {ecs::get_type_description<GameData>("gameData"), false},
   {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
@@ -203,8 +209,10 @@ void GameOver_singl_handler(const GameOverEvent &event, ecs::QueryIterator &begi
 {
   GameOver(
     event,
-      *begin.get_component<Transform2D>(0),
-      *begin.get_component<GameData>(1)
+      *begin.get_component<bool>(0),
+      *begin.get_component<vec2>(1),
+      *begin.get_component<Transform2D>(2),
+      *begin.get_component<GameData>(3)
   );
 }
 

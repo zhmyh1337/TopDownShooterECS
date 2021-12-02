@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/Builds/${config:launchOption.currentConfig.Project}/${config:launchOption.currentConfig.Project}-${config:launchOption.currentConfig.BuildType}.exe",
             "cwd": "${workspaceFolder}/Builds/${config:launchOption.currentConfig.Project}",
             "args": [],
-            //"preLaunchTask": "Build project",
+            "preLaunchTask": "Build project",
             "linux": {
                 "type": "cppdbg",
             }

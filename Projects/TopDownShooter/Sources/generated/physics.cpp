@@ -20,20 +20,22 @@ void gatherTargets(Callable lambda)
 }
 
 
-void MoveEntitiesWithVelocity_func();
+void MoveEntities_func();
 
-ecs::SystemDescription MoveEntitiesWithVelocity_descr("MoveEntitiesWithVelocity", {
+ecs::SystemDescription MoveEntities_descr("MoveEntities", {
   {ecs::get_type_description<Transform2D>("transform"), false},
-  {ecs::get_type_description<vec2>("velocity"), false}
-}, MoveEntitiesWithVelocity_func, ecs::SystemOrder::LOGIC + 1, (uint)(ecs::SystemTag::Game));
+  {ecs::get_type_description<vec2>("velocity"), false},
+  {ecs::get_type_description<vec2>("acceleration"), true}
+}, MoveEntities_func, ecs::SystemOrder::LOGIC + 1, (uint)(ecs::SystemTag::Game));
 
-void MoveEntitiesWithVelocity_func()
+void MoveEntities_func()
 {
-  for (ecs::QueryIterator begin = MoveEntitiesWithVelocity_descr.begin(), end = MoveEntitiesWithVelocity_descr.end(); begin != end; ++begin)
+  for (ecs::QueryIterator begin = MoveEntities_descr.begin(), end = MoveEntities_descr.end(); begin != end; ++begin)
   {
-    MoveEntitiesWithVelocity(
+    MoveEntities(
       *begin.get_component<Transform2D>(0),
-      *begin.get_component<vec2>(1)
+      *begin.get_component<vec2>(1),
+       begin.get_component<vec2>(2)
     );
   }
 }
@@ -45,6 +47,7 @@ ecs::SystemDescription BulletCollisionDetection_descr("BulletCollisionDetection"
   {ecs::get_type_description<ecs::EntityId>("eid"), false},
   {ecs::get_type_description<Transform2D>("transform"), false},
   {ecs::get_type_description<GameData>("gameData"), false},
+  {ecs::get_type_description<vec2>("velocity"), false},
   {ecs::get_type_description<ecs::Tag>("bullet"), false}
 }, BulletCollisionDetection_func, ecs::SystemOrder::LOGIC + 2, (uint)(ecs::SystemTag::Game));
 
@@ -55,7 +58,8 @@ void BulletCollisionDetection_func()
     BulletCollisionDetection(
       *begin.get_component<ecs::EntityId>(0),
       *begin.get_component<Transform2D>(1),
-      *begin.get_component<GameData>(2)
+      *begin.get_component<GameData>(2),
+      *begin.get_component<vec2>(3)
     );
   }
 }
