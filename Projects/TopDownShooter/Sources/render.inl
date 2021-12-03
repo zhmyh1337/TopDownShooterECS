@@ -3,13 +3,17 @@
 #include <Engine/Render/Shader/shader.h>
 #include <Engine/transform2d.h>
 #include <Engine/Render/sprite.h>
+#include <Engine/time.h>
 #include "camera.h"
 
 template<typename Callable>
 void gatherSprites(Callable);
 
 template<typename Callable>
-void getLocalPlayer(Callable);
+void getLocalPlayerTransform(Callable);
+
+template<typename Callable>
+void getLocalPlayerHealth(Callable);
 
 SYSTEM(ecs::SystemOrder::RENDER) RenderScene(WorldRenderer &wr, const Camera &camera)
 {
@@ -96,13 +100,27 @@ SYSTEM(ecs::SystemOrder::RENDER) RenderScene(WorldRenderer &wr, const Camera &ca
     }
 
     {
+        // fog
+        const auto shader = get_shader("fog_shader");
+        shader.use();
+        shader.set_mat4x4(shader.get_uniform_location("viewProjectionInversed"), glm::inverse(viewProjection));
+        QUERY(ecs::Tag localPlayer) getLocalPlayerTransform([&shader](const Transform2D& transform)
+        {
+            shader.set_vec2(shader.get_uniform_location("localPlayerPosition"), transform.position);
+        });
+        shader.set_float(shader.get_uniform_location("time"), Time::time());
+        shader.set_float(shader.get_uniform_location("visibleDistance"), 12.5f);
+        wr.quadVao.render();
+    }
+
+    {
         // healthbar
         const auto shader = get_shader("healthbar_shader");
         static Transform2D transform(vec2(1.0f - 0.2f - 0.01f, -0.915f), vec2(0.2f, 0.025f));
         static auto transformMatrix = transform.get_matrix();
         constexpr auto borderThicknessYRatio = 0.1f;
         shader.use();
-        QUERY(ecs::Tag localPlayer) getLocalPlayer([&shader](float health)
+        QUERY(ecs::Tag localPlayer) getLocalPlayerHealth([&shader](const float health)
         {
             shader.set_float(shader.get_uniform_location("health"), glm::clamp(health, 0.0f, 1.0f));
         });

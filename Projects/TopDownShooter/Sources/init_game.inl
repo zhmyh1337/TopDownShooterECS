@@ -18,7 +18,7 @@ static void InitCamera(WorldRenderer &wr, Camera& camera)
     auto projectionMatrix = glm::ortho(
         -static_cast<float>(resolution.x), static_cast<float>(resolution.x), 
         -static_cast<float>(resolution.y), static_cast<float>(resolution.y));
-    camera.Init(projectionMatrix, vec3(orthoScale * 1.0f, orthoScale * 2.0f, 1 / 10.f));
+    camera.Init(projectionMatrix, vec3(orthoScale * 1.0f, orthoScale * 1.5f, 1 / 10.f));
 }
 
 static void InitEntities(const SpritesPool &sp)

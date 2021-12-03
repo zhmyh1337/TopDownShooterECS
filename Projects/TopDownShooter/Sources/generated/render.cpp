@@ -23,15 +23,32 @@ void gatherSprites(Callable lambda)
 }
 
 
-ecs::QueryDescription gatherLocalPlayer_descr("getLocalPlayer", {
+ecs::QueryDescription getLocalPlayerTransform_descr("getLocalPlayerTransform", {
+  {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
+});
+
+template<typename Callable>
+void getLocalPlayerTransform(Callable lambda)
+{
+  for (ecs::QueryIterator begin = getLocalPlayerTransform_descr.begin(), end = getLocalPlayerTransform_descr.end(); begin != end; ++begin)
+  {
+    lambda(
+      *begin.get_component<Transform2D>(0)
+    );
+  }
+}
+
+
+ecs::QueryDescription getLocalPlayerHealth_descr("getLocalPlayerHealth", {
   {ecs::get_type_description<float>("health"), false},
   {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
 });
 
 template<typename Callable>
-void getLocalPlayer(Callable lambda)
+void getLocalPlayerHealth(Callable lambda)
 {
-  for (ecs::QueryIterator begin = gatherLocalPlayer_descr.begin(), end = gatherLocalPlayer_descr.end(); begin != end; ++begin)
+  for (ecs::QueryIterator begin = getLocalPlayerHealth_descr.begin(), end = getLocalPlayerHealth_descr.end(); begin != end; ++begin)
   {
     lambda(
       *begin.get_component<float>(0)

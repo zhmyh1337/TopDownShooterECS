@@ -137,7 +137,7 @@ EVENT(ecs::Tag localPlayer) LocalPlayerReceiveDamage(const LocalPlayerReceiveDam
     lastDamageReceivedTime = Time::time();
     if (health <= 0 && !gameData.isGameOver)
     {
-        ecs::send_event_immediate(GameOverEvent());
+        ecs::send_event(GameOverEvent());
     }
 }
 
