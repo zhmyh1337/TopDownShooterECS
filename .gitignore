@@ -1,2 +1,3 @@
 Builds/win/*
 !Builds/win/libSDL2.a
+!Builds/win/libSDL2_mixer.a

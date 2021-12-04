@@ -40,6 +40,8 @@ if(WIN32)
 else()
     find_package(SDL2 REQUIRED)
     include_directories(${SDL2_INCLUDE_DIRS})
+    find_package(SDL2_MIXER REQUIRED)
+    include_directories(${SDL2_MIXER_INCLUDE_DIRS})
 endif()
 
 

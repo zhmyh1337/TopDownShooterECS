@@ -6,7 +6,8 @@ void InitScene_handler(const ecs::OnSceneCreated &event);
 ecs::EventDescription<ecs::OnSceneCreated> InitScene_descr("InitScene", {
   {ecs::get_type_description<TexturesPool>("tp"), false},
   {ecs::get_type_description<SpritesPool>("sp"), false},
-  {ecs::get_type_description<SpriteSheetsPool>("ssp"), false}
+  {ecs::get_type_description<SpriteSheetsPool>("ssp"), false},
+  {ecs::get_type_description<AudioPool>("ap"), false}
 }, InitScene_handler, (uint)(ecs::SystemTag::Game));
 
 void InitScene_handler(const ecs::OnSceneCreated &event)
@@ -17,7 +18,8 @@ void InitScene_handler(const ecs::OnSceneCreated &event)
       event,
       *begin.get_component<TexturesPool>(0),
       *begin.get_component<SpritesPool>(1),
-      *begin.get_component<SpriteSheetsPool>(2)
+      *begin.get_component<SpriteSheetsPool>(2),
+      *begin.get_component<AudioPool>(3)
     );
   }
 }
@@ -28,7 +30,8 @@ void InitScene_singl_handler(const ecs::OnSceneCreated &event, ecs::QueryIterato
 ecs::SingleEventDescription<ecs::OnSceneCreated> InitScene_singl_descr("InitScene", {
   {ecs::get_type_description<TexturesPool>("tp"), false},
   {ecs::get_type_description<SpritesPool>("sp"), false},
-  {ecs::get_type_description<SpriteSheetsPool>("ssp"), false}
+  {ecs::get_type_description<SpriteSheetsPool>("ssp"), false},
+  {ecs::get_type_description<AudioPool>("ap"), false}
 }, InitScene_singl_handler, (uint)(ecs::SystemTag::Game));
 
 void InitScene_singl_handler(const ecs::OnSceneCreated &event, ecs::QueryIterator &begin)
@@ -37,7 +40,8 @@ void InitScene_singl_handler(const ecs::OnSceneCreated &event, ecs::QueryIterato
     event,
       *begin.get_component<TexturesPool>(0),
       *begin.get_component<SpritesPool>(1),
-      *begin.get_component<SpriteSheetsPool>(2)
+      *begin.get_component<SpriteSheetsPool>(2),
+      *begin.get_component<AudioPool>(3)
   );
 }
 

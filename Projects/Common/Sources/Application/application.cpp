@@ -11,27 +11,22 @@
 void compile_shaders();
 
 Application::Application(const string &window_name)
-    : context(window_name), timer(), sceneManager(), resourcesPath("Resources"),
-      shadersPath("Shaders")
-{
+    : context(window_name), timer(), sceneManager(), texturesPath("Textures"),
+      audioPath("Audio"), shadersPath("Shaders") {
   application = this;
   compile_shaders();
 }
-void Application::start()
-{
+void Application::start() {
   sceneManager.init();
   get_profiler();
 }
-bool Application::sdl_event_handler()
-{
+bool Application::sdl_event_handler() {
   SDL_Event event;
   bool running = true;
   Input &input = Input::input();
-  while (SDL_PollEvent(&event))
-  {
+  while (SDL_PollEvent(&event)) {
     ImGui_ImplSDL2_ProcessEvent(&event);
-    switch (event.type)
-    {
+    switch (event.type) {
     case SDL_QUIT:
       running = false;
       break;
@@ -63,19 +58,16 @@ bool Application::sdl_event_handler()
   }
   return running;
 }
-void Application::main_loop()
-{
+void Application::main_loop() {
   bool running = true;
-  while (running)
-  {
+  while (running) {
     get_profiler().start_frame();
     PROFILER(main_loop);
     timer.update();
     PROFILER(sdl_events)
     running = sdl_event_handler();
     sdl_events.stop();
-    if (running)
-    {
+    if (running) {
       PROFILER(ecs_events);
       sceneManager.process_events();
       ecs_events.stop();
@@ -105,8 +97,7 @@ void Application::main_loop()
     get_profiler().end_frame();
   }
 }
-void Application::exit()
-{
+void Application::exit() {
   sceneManager.destroy_scene();
 
   ImGui_ImplOpenGL3_Shutdown();
@@ -114,8 +105,15 @@ void Application::exit()
   ImGui::DestroyContext();
   SDL_Quit();
 }
-string project_resources_path(const string &path)
-{
-  return Application::instance().resourcesPath.string() + "/" + path;
+string project_textures_path(const string &path) {
+  return Application::instance().texturesPath.string() + "/" + path;
 }
-string project_resources_path() { return Application::instance().resourcesPath.string(); }
+string project_textures_path() {
+  return Application::instance().texturesPath.string();
+}
+string project_audio_path(const string &path) {
+  return Application::instance().audioPath.string() + "/" + path;
+}
+string project_audio_path() {
+  return Application::instance().audioPath.string();
+}
