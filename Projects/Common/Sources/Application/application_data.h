@@ -14,8 +14,9 @@ private:
   Time timer;
 public:
   ecs::SceneManager sceneManager;
-  filesystem::path projectPath, projectResourcesPath, projectShaderPath;
-  Application(const string &window_name, const string &project_path);
+  filesystem::path resourcesPath;
+  filesystem::path shadersPath;
+  Application(const string &window_name);
   bool sdl_event_handler();
   void start();
   void main_loop();

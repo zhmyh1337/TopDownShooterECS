@@ -14,9 +14,9 @@ endif()
 
 file(GLOB_RECURSE ENGINE_SOURCES ${LIB_FOLDER}/*.cpp)
 file(GLOB_RECURSE ENGINE_C_SOURCES ${LIB_FOLDER}/*.c)
+file(GLOB_RECURSE ENGINE_STATIC_LIBS ${LIB_FOLDER}/*.lib)
 
 include_directories(${LIB_FOLDER})
 include_directories(${LIB_FOLDER}/Systems)
 add_library(Engine OBJECT ${ENGINE_SOURCES} ${ENGINE_C_SOURCES})
-
-
+target_link_libraries(Engine ${ENGINE_STATIC_LIBS})

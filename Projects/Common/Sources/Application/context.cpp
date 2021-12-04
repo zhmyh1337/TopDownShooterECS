@@ -4,6 +4,7 @@
 #include "Engine/imgui/imgui_impl_opengl3.h"
 #include "Engine/imgui/imgui_impl_sdl.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 // During init, enable debug output
 Context::Context(const string &window_name)

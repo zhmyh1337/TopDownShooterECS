@@ -30,7 +30,7 @@ void read_directories(const fs::path &folder_path)
 
 void compile_shaders()
 {
-  read_directories(Application::instance().projectShaderPath);
+  read_directories(Application::instance().shadersPath);
   process_codegen_shaders();
   debug_log("finish shader compilation");
 }

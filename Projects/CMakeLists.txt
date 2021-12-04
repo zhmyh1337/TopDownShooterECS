@@ -51,7 +51,3 @@ endif()
 
 add_executable(${PROJECT_NAME} )
 target_link_libraries(${PROJECT_NAME} SDL2 Engine Game ${ADDITIONAL_LIBS})
-
-
-
-
