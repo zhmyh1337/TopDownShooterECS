@@ -116,7 +116,7 @@ SYSTEM(ecs::SystemOrder::RENDER) RenderScene(WorldRenderer &wr, const Camera &ca
     {
         // healthbar
         const auto shader = get_shader("healthbar_shader");
-        static Transform2D transform(vec2(1.0f - 0.2f - 0.01f, -0.915f), vec2(0.2f, 0.025f));
+        static Transform2D transform(vec2(1.0f - 0.2f - 0.01f, -0.95f), vec2(0.2f, 0.0275f));
         static auto transformMatrix = transform.get_matrix();
         constexpr auto borderThicknessYRatio = 0.1f;
         shader.use();

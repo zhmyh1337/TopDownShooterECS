@@ -39,6 +39,7 @@ void profiler()
     }
   }
 }
+
 SYSTEM(ecs::SystemOrder::UIMENU) menu_profiler()
 {
 #if not(NDEBUG)

@@ -32,6 +32,11 @@ if(WIN32)
         IMPORTED_LOCATION_RELEASE "${BuildDir}/win/libSDL2.a"
         IMPORTED_LOCATION_DEBUG "${BuildDir}/win/libSDL2.a"
         LINKER_LANGUAGE CXX)
+    add_library(SDL2_MIXER STATIC IMPORTED)
+    set_target_properties(SDL2_MIXER PROPERTIES
+        IMPORTED_LOCATION_RELEASE "${BuildDir}/win/libSDL2_mixer.a"
+        IMPORTED_LOCATION_DEBUG "${BuildDir}/win/libSDL2_mixer.a"
+        LINKER_LANGUAGE CXX)
 else()
     find_package(SDL2 REQUIRED)
     include_directories(${SDL2_INCLUDE_DIRS})
@@ -50,4 +55,4 @@ endif()
 
 
 add_executable(${PROJECT_NAME} )
-target_link_libraries(${PROJECT_NAME} SDL2 Engine Game ${ADDITIONAL_LIBS})
+target_link_libraries(${PROJECT_NAME} SDL2 SDL2_MIXER Engine Game ${ADDITIONAL_LIBS})

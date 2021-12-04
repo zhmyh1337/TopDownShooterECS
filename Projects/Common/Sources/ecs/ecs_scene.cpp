@@ -14,7 +14,7 @@ namespace ecs
   void SceneManager::init()
   {
     currentScene = 0;
-    
+
     scenes.emplace_back(Scene{"mainScene", SystemTag::Game, {}});
     ecs::core().currentSceneTags = SystemTag::Game;
     ecs::send_event(OnSceneCreated{"mainScene", SystemTag::Game});
@@ -23,25 +23,26 @@ namespace ecs
     std::sort(systems.begin(), systems.end(), system_comparator);
     logic.begin = systems.begin();
     logic.end = std::find_if(systems.begin(), systems.end(),
-      [](const SystemDescription *a){return a->order >= (int)SystemOrder::RENDER;});
+                             [](const SystemDescription *a)
+                             { return a->order >= (int)SystemOrder::RENDER; });
     render.begin = logic.end;
     render.end = std::find_if(systems.begin(), systems.end(),
-      [](const SystemDescription *a){return a->order >= (int)SystemOrder::UI;});
+                              [](const SystemDescription *a)
+                              { return a->order >= (int)SystemOrder::UI; });
     ui.begin = render.end;
     ui.end = std::find_if(systems.begin(), systems.end(),
-      [](const SystemDescription *a){return a->order >= (int)SystemOrder::UIMENU;});
+                          [](const SystemDescription *a)
+                          { return a->order >= (int)SystemOrder::UIMENU; });
     menu.begin = ui.end;
     menu.end = systems.end();
-
   }
-  
 
   void SceneManager::update_range(const SystemRange &range)
   {
     for (SystemIterator it = range.begin; it != range.end; it++)
       if ((*it)->tags & scenes[currentScene].flags)
       {
-        //debug_log("execute %s system", (*it)->name.c_str());
+        // debug_log("execute %s system", (*it)->name.c_str());
         ProfilerLabel label((*it)->name.c_str());
         (*it)->execute();
       }
@@ -60,12 +61,13 @@ namespace ecs
   void SceneManager::update_ui()
   {
     update_range(ui);
+#if not(NDEBUG)
     if (ImGui::BeginMainMenuBar())
     {
       update_range(menu);
       ImGui::EndMainMenuBar();
     }
-
+#endif
   }
   void SceneManager::destroy_entities(bool with_swap)
   {
@@ -98,7 +100,7 @@ namespace ecs
     process_only_events();
     destroy_entities(true);
   }
-  
+
   void SceneManager::destroy_scene()
   {
     core().destroy_entities();
