@@ -10,7 +10,7 @@
 // During init, enable debug output
 Context::Context(const std::string &window_name) {
   SDL_Init(SDL_INIT_EVERYTHING);
-  Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+  Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 100);
   const char *glsl_version = "#version 450";
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);

@@ -1,9 +1,9 @@
 #pragma once
 
 #include <ecs/ecs.h>
-#include <SDL2/SDL_mixer.h>
+#include "Sound/sound_effect.h"
 
 struct AudioPool : ecs::Singleton
 {
-    Mix_Chunk* rifleShot;
+    SoundEffect rifleShot;
 };

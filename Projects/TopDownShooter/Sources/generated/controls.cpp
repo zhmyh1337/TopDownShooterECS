@@ -60,6 +60,7 @@ ecs::SystemDescription LocalPlayerShoot_descr("LocalPlayerShoot", {
   {ecs::get_type_description<bool>("canShoot"), false},
   {ecs::get_type_description<SpritesPool>("sp"), false},
   {ecs::get_type_description<SpriteSheetsPool>("ssp"), false},
+  {ecs::get_type_description<AudioPool>("ap"), false},
   {ecs::get_type_description<GameData>("gameData"), false},
   {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
 }, LocalPlayerShoot_func, ecs::SystemOrder::LOGIC + 2, (uint)(ecs::SystemTag::Game));
@@ -75,7 +76,8 @@ void LocalPlayerShoot_func()
       *begin.get_component<bool>(3),
       *begin.get_component<SpritesPool>(4),
       *begin.get_component<SpriteSheetsPool>(5),
-      *begin.get_component<GameData>(6)
+      *begin.get_component<AudioPool>(6),
+      *begin.get_component<GameData>(7)
     );
   }
 }

@@ -6,6 +6,7 @@
 #include "constants.h"
 #include "sprites_pool.h"
 #include "sprite_sheets_pool.h"
+#include "audio_pool.h"
 #include "game_data.h"
 
 EVENT() ChangeZoom(const MouseWheelEvent &event, Camera& camera)
@@ -69,7 +70,7 @@ SYSTEM(ecs::SystemOrder::LOGIC, ecs::Tag localPlayer) LocalPlayerViewToMouse(
 
 SYSTEM(ecs::SystemOrder::LOGIC + 2, ecs::Tag localPlayer) LocalPlayerShoot(
     const Transform2D& transform, int& shootingState, float& lastShotTime, bool& canShoot,
-    const SpritesPool& sp, const SpriteSheetsPool& ssp, const GameData& gameData)
+    const SpritesPool& sp, const SpriteSheetsPool& ssp, AudioPool& ap, const GameData& gameData)
 {
     if (gameData.isGameOver)
     {
@@ -104,6 +105,7 @@ SYSTEM(ecs::SystemOrder::LOGIC + 2, ecs::Tag localPlayer) LocalPlayerShoot(
             {"bullet", {}}
         );
         canShoot = false;
+        ap.rifleShot.Play();
     }
 
     if (Input::get_mouse_button_state(MouseButton::LeftButton) && shootingState == -1 &&

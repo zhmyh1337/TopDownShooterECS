@@ -7,6 +7,7 @@
 #include "sprites_pool.h"
 #include "sprite_sheets_pool.h"
 #include "audio_pool.h"
+#include "Sound/sound_effects_factory.h"
 #include "init_game_event.h"
 
 static void InitTexturesPool(TexturesPool &tp)
@@ -57,9 +58,11 @@ static void InitSpriteSheetsPool(const TexturesPool &tp, SpriteSheetsPool& ssp)
     ssp.blood = SpriteSheet(tp.blood, get_shader("standard_shader"), 4);
 }
 
-static void InitAudioPool(AudioPool& ap)
+static void InitAudioPool(AudioPool& ap, SoundEffectsFactory& sef)
 {
-    ap.rifleShot = Mix_LoadWAV(project_audio_path("bad.wav").c_str());
+    ap.rifleShot = sef.Create(project_audio_path("rifle_shot.wav"), 1);
+
+    sef.AllocateChannels();
 }
 
 EVENT() InitScene(
@@ -67,12 +70,13 @@ EVENT() InitScene(
     TexturesPool& tp,
     SpritesPool& sp,
     SpriteSheetsPool &ssp,
-    AudioPool& ap)
+    AudioPool& ap,
+    SoundEffectsFactory& sef)
 {
     InitTexturesPool(tp);
     InitSpritesPool(tp, sp);
     InitSpriteSheetsPool(tp, ssp);
-    InitAudioPool(ap);
+    InitAudioPool(ap, sef);
 
     debug_log("scene %s created", event.scene_name.c_str());
 
