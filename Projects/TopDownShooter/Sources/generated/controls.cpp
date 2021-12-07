@@ -63,7 +63,7 @@ ecs::SystemDescription LocalPlayerShoot_descr("LocalPlayerShoot", {
   {ecs::get_type_description<AudioPool>("ap"), false},
   {ecs::get_type_description<GameData>("gameData"), false},
   {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
-}, LocalPlayerShoot_func, ecs::SystemOrder::LOGIC + 2, (uint)(ecs::SystemTag::Game));
+}, LocalPlayerShoot_func, ecs::SystemOrder::LOGIC + 3, (uint)(ecs::SystemTag::Game));
 
 void LocalPlayerShoot_func()
 {

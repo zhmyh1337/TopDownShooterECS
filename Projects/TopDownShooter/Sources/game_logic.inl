@@ -6,6 +6,7 @@
 #include "sprite_sheets_pool.h"
 #include "constants.h"
 #include "game_data.h"
+#include "audio_pool.h"
 
 SYSTEM(ecs::SystemOrder::LOGIC - 2) SpawnEnemies(GameData& gameData, const Camera& camera)
 {
@@ -47,12 +48,13 @@ SYSTEM(ecs::SystemOrder::LOGIC - 2) SpawnEnemies(GameData& gameData, const Camer
         break;
     }
 
-    ecs::create_entity<Sprite, Transform2D, vec2, vec2, vec2, float, int, bool, ecs::Tag>(
+    ecs::create_entity<Sprite, Transform2D, vec2, vec2, vec2, float, float, int, bool, ecs::Tag>(
         {"sprite", {}},  
         {"transform", Transform2D(spawnPosition, transformScale)},
         {"roamingDestination", {}},
         {"velocity", {}},
         {"viewDirection", {}},
+        {"firstStepTime", Time::time()},
         {"lastAttackTime", {}},
         {"attackState", -1},
         {"canDamage", true},
@@ -108,9 +110,14 @@ void gatherLeavingEnemies(Callable);
 
 struct GameOverEvent {};
 
-EVENT(ecs::Tag localPlayer) GameOver(const GameOverEvent& event, bool& isIdling, vec2& velocity, const Transform2D& transform, GameData& gameData)
+EVENT(ecs::Tag localPlayer) GameOver(
+    const GameOverEvent& event, bool& isIdling, vec2& velocity,
+    const Transform2D& transform, GameData& gameData,
+    AudioPool& ap)
 {
     gameData.isGameOver = true;
+
+    ap.gameOver.AddToPlaybackQueue(static_cast<int>(SoundEffect::UniqueIds::GameOver), transform.position);
 
     isIdling = true;
     velocity = vec2(0);
@@ -131,8 +138,11 @@ struct LocalPlayerReceiveDamageEvent
 };
 
 EVENT(ecs::Tag localPlayer) LocalPlayerReceiveDamage(const LocalPlayerReceiveDamageEvent& event,
-    float& health, float& lastDamageReceivedTime, GameData& gameData)
+    const Transform2D& transform, float& health, float& lastDamageReceivedTime,
+    GameData& gameData, AudioPool& ap)
 {
+    ap.localPlayerTakesDamage.AddToPlaybackQueue(
+        static_cast<int>(SoundEffect::UniqueIds::LocalPlayerTakesDamage), transform.position);
     health -= event.damage;
     lastDamageReceivedTime = Time::time();
     if (health <= 0 && !gameData.isGameOver)

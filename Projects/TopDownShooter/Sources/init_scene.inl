@@ -60,7 +60,10 @@ static void InitSpriteSheetsPool(const TexturesPool &tp, SpriteSheetsPool& ssp)
 
 static void InitAudioPool(AudioPool& ap, SoundEffectsFactory& sef)
 {
-    ap.rifleShot = sef.Create(project_audio_path("rifle_shot.wav"), 1);
+    ap.rifleShot = sef.Create(project_audio_path("rifle_shot.wav"), 1, 0.1f);
+    ap.localPlayerTakesDamage = sef.Create(project_audio_path("local_player_takes_damage.wav"), 1, 1.0f);
+    ap.bulletDamage = sef.Create(project_audio_path("bullet_damage.wav"), 10, 0.3f);
+    ap.gameOver = sef.Create(project_audio_path("game_over.wav"), 1, 1.0f);
 
     sef.AllocateChannels();
 }

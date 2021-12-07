@@ -68,7 +68,7 @@ SYSTEM(ecs::SystemOrder::LOGIC, ecs::Tag localPlayer) LocalPlayerViewToMouse(
     transform.rotation = gammaAngle - betaAngle + PIHALF;
 }
 
-SYSTEM(ecs::SystemOrder::LOGIC + 2, ecs::Tag localPlayer) LocalPlayerShoot(
+SYSTEM(ecs::SystemOrder::LOGIC + 3, ecs::Tag localPlayer) LocalPlayerShoot(
     const Transform2D& transform, int& shootingState, float& lastShotTime, bool& canShoot,
     const SpritesPool& sp, const SpriteSheetsPool& ssp, AudioPool& ap, const GameData& gameData)
 {
@@ -105,7 +105,7 @@ SYSTEM(ecs::SystemOrder::LOGIC + 2, ecs::Tag localPlayer) LocalPlayerShoot(
             {"bullet", {}}
         );
         canShoot = false;
-        ap.rifleShot.Play();
+        ap.rifleShot.AddToPlaybackQueue(static_cast<int>(SoundEffect::UniqueIds::LocalPlayerShoots), transform.position);
     }
 
     if (Input::get_mouse_button_state(MouseButton::LeftButton) && shootingState == -1 &&

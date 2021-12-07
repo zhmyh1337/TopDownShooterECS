@@ -1,11 +1,11 @@
 #include "sound_effects_factory.h"
 #include <SDL2/SDL_mixer.h>
 
-SoundEffect SoundEffectsFactory::Create(std::string_view filePath, size_t channelsCount)
+SoundEffect SoundEffectsFactory::Create(std::string_view filePath, size_t channelsCount, float volume)
 {
-    auto soundEffect = SoundEffect(Mix_LoadWAV(filePath.data()),
-        static_cast<int>(m_totalChannelsCount),
-        static_cast<int>(m_totalChannelsCount + channelsCount));
+    auto mixChunk = Mix_LoadWAV(filePath.data());
+    Mix_VolumeChunk(mixChunk, volume * MIX_MAX_VOLUME);
+    auto soundEffect = SoundEffect(mixChunk, static_cast<int>(m_totalChannelsCount), channelsCount);
     m_totalChannelsCount += channelsCount;
     return soundEffect;
 }

@@ -66,10 +66,11 @@ static void InitEntities(const SpritesPool &sp)
         {"localPlayer", {}}
     );
 
-    ecs::create_entity<Sprite, vec4, Transform2D, ecs::Tag, ecs::Tag>(
+    ecs::create_entity<Sprite, vec4, Transform2D, size_t, ecs::Tag, ecs::Tag>(
         {"sprite", {}},
         {"color", {}},
         {"transform", {}},
+        {"lastSpriteIndex", -1},
         {"soldierPart", {}},
         {"soldierFeet", {}}
     );

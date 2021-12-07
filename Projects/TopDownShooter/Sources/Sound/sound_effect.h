@@ -1,32 +1,39 @@
 #pragma once
 
-#include <SDL2/SDL_mixer.h>
 #include <glm/glm.hpp>
-#include <string_view>
+#include <vector>
+#include "sound_channel.h"
 
 class SoundEffect
 {
 public:
+    enum class UniqueIds
+    {
+        GameOver = -3,
+        LocalPlayerTakesDamage = -2,
+        LocalPlayerShoots = -1,
+        EnemyTakesBulletDamageBegin = 0
+    };
+
+public:
     SoundEffect();
 
-    SoundEffect(Mix_Chunk* mixChunk, int channelBegin, int channelEnd);
+    SoundEffect(Mix_Chunk* mixChunk, int firstChannelIndex, size_t channelsCount);
 
-    void Play();
+    void AddToPlaybackQueue(int uniqueId, glm::vec2 position = glm::vec2());
 
-    void PlayAtVector(const glm::vec2& vec);
-
-private:
-    void PlayImpl();
-
-    void SetPosition(const glm::vec2& vec);
-
-    void NextChannel();
+    void PlayAll(const glm::vec2& earPosition);
 
 private:
-    static constexpr auto k_unitScale = 10.0f;
+    struct PlaybackQueueData
+    {
+        int uniqueId;
+        glm::vec2 position;
+    };
 
+private:
     Mix_Chunk* m_mixChunk;
-    int m_currentChannel;
-    int m_channelBegin;
-    int m_channelEnd;
+
+    std::vector<SoundChannel> m_reservedChannels;
+    std::vector<PlaybackQueueData> m_playbackQueue;
 };

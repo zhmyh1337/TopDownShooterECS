@@ -154,6 +154,7 @@ ecs::EventDescription<GameOverEvent> GameOver_descr("GameOver", {
   {ecs::get_type_description<vec2>("velocity"), false},
   {ecs::get_type_description<Transform2D>("transform"), false},
   {ecs::get_type_description<GameData>("gameData"), false},
+  {ecs::get_type_description<AudioPool>("ap"), false},
   {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
 }, GameOver_handler, (uint)(ecs::SystemTag::Game));
 
@@ -166,7 +167,8 @@ void GameOver_handler(const GameOverEvent &event)
       *begin.get_component<bool>(0),
       *begin.get_component<vec2>(1),
       *begin.get_component<Transform2D>(2),
-      *begin.get_component<GameData>(3)
+      *begin.get_component<GameData>(3),
+      *begin.get_component<AudioPool>(4)
     );
   }
 }
@@ -175,9 +177,11 @@ void GameOver_handler(const GameOverEvent &event)
 void LocalPlayerReceiveDamage_handler(const LocalPlayerReceiveDamageEvent &event);
 
 ecs::EventDescription<LocalPlayerReceiveDamageEvent> LocalPlayerReceiveDamage_descr("LocalPlayerReceiveDamage", {
+  {ecs::get_type_description<Transform2D>("transform"), false},
   {ecs::get_type_description<float>("health"), false},
   {ecs::get_type_description<float>("lastDamageReceivedTime"), false},
   {ecs::get_type_description<GameData>("gameData"), false},
+  {ecs::get_type_description<AudioPool>("ap"), false},
   {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
 }, LocalPlayerReceiveDamage_handler, (uint)(ecs::SystemTag::Game));
 
@@ -187,9 +191,11 @@ void LocalPlayerReceiveDamage_handler(const LocalPlayerReceiveDamageEvent &event
   {
     LocalPlayerReceiveDamage(
       event,
-      *begin.get_component<float>(0),
+      *begin.get_component<Transform2D>(0),
       *begin.get_component<float>(1),
-      *begin.get_component<GameData>(2)
+      *begin.get_component<float>(2),
+      *begin.get_component<GameData>(3),
+      *begin.get_component<AudioPool>(4)
     );
   }
 }
@@ -202,6 +208,7 @@ ecs::SingleEventDescription<GameOverEvent> GameOver_singl_descr("GameOver", {
   {ecs::get_type_description<vec2>("velocity"), false},
   {ecs::get_type_description<Transform2D>("transform"), false},
   {ecs::get_type_description<GameData>("gameData"), false},
+  {ecs::get_type_description<AudioPool>("ap"), false},
   {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
 }, GameOver_singl_handler, (uint)(ecs::SystemTag::Game));
 
@@ -212,7 +219,8 @@ void GameOver_singl_handler(const GameOverEvent &event, ecs::QueryIterator &begi
       *begin.get_component<bool>(0),
       *begin.get_component<vec2>(1),
       *begin.get_component<Transform2D>(2),
-      *begin.get_component<GameData>(3)
+      *begin.get_component<GameData>(3),
+      *begin.get_component<AudioPool>(4)
   );
 }
 
@@ -220,9 +228,11 @@ void GameOver_singl_handler(const GameOverEvent &event, ecs::QueryIterator &begi
 void LocalPlayerReceiveDamage_singl_handler(const LocalPlayerReceiveDamageEvent &event, ecs::QueryIterator &begin);
 
 ecs::SingleEventDescription<LocalPlayerReceiveDamageEvent> LocalPlayerReceiveDamage_singl_descr("LocalPlayerReceiveDamage", {
+  {ecs::get_type_description<Transform2D>("transform"), false},
   {ecs::get_type_description<float>("health"), false},
   {ecs::get_type_description<float>("lastDamageReceivedTime"), false},
   {ecs::get_type_description<GameData>("gameData"), false},
+  {ecs::get_type_description<AudioPool>("ap"), false},
   {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
 }, LocalPlayerReceiveDamage_singl_handler, (uint)(ecs::SystemTag::Game));
 
@@ -230,9 +240,11 @@ void LocalPlayerReceiveDamage_singl_handler(const LocalPlayerReceiveDamageEvent 
 {
   LocalPlayerReceiveDamage(
     event,
-      *begin.get_component<float>(0),
+      *begin.get_component<Transform2D>(0),
       *begin.get_component<float>(1),
-      *begin.get_component<GameData>(2)
+      *begin.get_component<float>(2),
+      *begin.get_component<GameData>(3),
+      *begin.get_component<AudioPool>(4)
   );
 }
 
