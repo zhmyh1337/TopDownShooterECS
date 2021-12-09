@@ -40,9 +40,9 @@ SYSTEM(ecs::SystemOrder::LOGIC + 1, ecs::Tag particle, ecs::Tag blood) UpdateBlo
 
 EVENT() EntityEmitBlood(const EntityEmitBloodEvent& event, const Transform2D& transform)
 {
-    constexpr auto particleLifeTime = 10.0f;
+    constexpr auto particleLifeTime = 7.5f;
     auto particleTransform = transform;
-    particleTransform.scale *= 1.0f;
+    particleTransform.scale *= event.isLethal ? 1.0f : 0.3f;
     std::uniform_real_distribution<float> minusPlusOneUniform(-1, 1);
     const auto particleVelocity = event.momentumVelocity/*  +
         vec2(minusPlusOneUniform(Random::Get()), minusPlusOneUniform(Random::Get())) * 0.5f */;
@@ -50,7 +50,7 @@ EVENT() EntityEmitBlood(const EntityEmitBloodEvent& event, const Transform2D& tr
     const auto particleAcceleration = -particleVelocity / particleLifeTime / k_bloodParticleStopAtLifeCycleState;
     ecs::create_entity<Sprite, vec4, int, float, float, Transform2D, vec2, vec2, ecs::Tag, ecs::Tag>(
         {"sprite", {}},
-        {"color", vec4(1)},
+        {"color", vec4(vec3(0.75f), 1)},
         {"renderOrder", -1},
         {"lifeCycleState", 0.0f},
         {"lifeTime", particleLifeTime},

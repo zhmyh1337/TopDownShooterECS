@@ -126,7 +126,7 @@ void RenderFog(const WorldRenderer& wr, const glm::mat4& viewProjection,
     shader.set_mat4x4("viewProjectionInversed", glm::inverse(viewProjection));
     shader.set_float("time", Time::time());
     shader.set_float("visibleDistance", 12.5f);
-    SetShaderPrimitiveShadowsUniforms(shader, localPlayerInfo, 0.25f);
+    SetShaderPrimitiveShadowsUniforms(shader, localPlayerInfo, 0.35f);
     wr.quadVao.render();
 }
 

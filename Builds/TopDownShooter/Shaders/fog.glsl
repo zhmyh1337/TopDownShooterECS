@@ -126,6 +126,6 @@ void main()
     }
 
     const float dist = dot(localPlayerPosition - world, localPlayerPosition - world);
-    outColor = vec4(vec3(0.5), (noise + 1) * clamp(dist / (visibleDistance * visibleDistance), 0, 1));
+    outColor = vec4(vec3(0.3), (noise + 1) * clamp(dist / (visibleDistance * visibleDistance), 0, 1));
     SetPrimitiveShadows();
 }

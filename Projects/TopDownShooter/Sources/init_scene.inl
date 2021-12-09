@@ -62,7 +62,7 @@ static void InitAudioPool(AudioPool& ap, SoundEffectsFactory& sef)
 {
     ap.rifleShot = sef.Create(project_audio_path("rifle_shot.wav"), 1, 0.15f);
     ap.localPlayerTakesDamage = sef.Create(project_audio_path("local_player_takes_damage.wav"), 1, 0.5f);
-    ap.bulletDamage = sef.Create(project_audio_path("bullet_damage.wav"), 10, 0.3f);
+    ap.bulletDamage = sef.Create(project_audio_path("bullet_damage.wav"), 10, 0.2f);
     ap.gameOver = sef.Create(project_audio_path("game_over.wav"), 1, 0.5f);
 
     sef.AllocateChannels();

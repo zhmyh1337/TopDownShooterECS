@@ -29,6 +29,11 @@ namespace consts
         };
     }
 
+    struct bullet
+    {
+        static constexpr auto damage = 1.0f;
+    };
+
     struct soldier
     {
         static constexpr auto fireCooldown = 1.0f / 10;

@@ -45,6 +45,7 @@ void gatherLeavingEnemies(Callable lambda)
 
 ecs::QueryDescription gatherAttackingEnemies_descr("gatherAttackingEnemies", {
   {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<float>("size"), false},
   {ecs::get_type_description<float>("lastAttackTime"), false},
   {ecs::get_type_description<int>("attackState"), false},
   {ecs::get_type_description<bool>("canDamage"), false},
@@ -59,8 +60,9 @@ void gatherAttackingEnemies(Callable lambda)
     lambda(
       *begin.get_component<Transform2D>(0),
       *begin.get_component<float>(1),
-      *begin.get_component<int>(2),
-      *begin.get_component<bool>(3)
+      *begin.get_component<float>(2),
+      *begin.get_component<int>(3),
+      *begin.get_component<bool>(4)
     );
   }
 }
@@ -201,6 +203,31 @@ void LocalPlayerReceiveDamage_handler(const LocalPlayerReceiveDamageEvent &event
 }
 
 
+void EnemyGotShot_handler(const EnemyGotShotEvent &event);
+
+ecs::EventDescription<EnemyGotShotEvent> EnemyGotShot_descr("EnemyGotShot", {
+  {ecs::get_type_description<ecs::EntityId>("eid"), false},
+  {ecs::get_type_description<float>("health"), false},
+  {ecs::get_type_description<GameData>("gameData"), false},
+  {ecs::get_type_description<AudioPool>("ap"), false},
+  {ecs::get_type_description<ecs::Tag>("enemy"), false}
+}, EnemyGotShot_handler, (uint)(ecs::SystemTag::Game));
+
+void EnemyGotShot_handler(const EnemyGotShotEvent &event)
+{
+  for (ecs::QueryIterator begin = EnemyGotShot_descr.begin(), end = EnemyGotShot_descr.end(); begin != end; ++begin)
+  {
+    EnemyGotShot(
+      event,
+      *begin.get_component<ecs::EntityId>(0),
+      *begin.get_component<float>(1),
+      *begin.get_component<GameData>(2),
+      *begin.get_component<AudioPool>(3)
+    );
+  }
+}
+
+
 void GameOver_singl_handler(const GameOverEvent &event, ecs::QueryIterator &begin);
 
 ecs::SingleEventDescription<GameOverEvent> GameOver_singl_descr("GameOver", {
@@ -245,6 +272,28 @@ void LocalPlayerReceiveDamage_singl_handler(const LocalPlayerReceiveDamageEvent 
       *begin.get_component<float>(2),
       *begin.get_component<GameData>(3),
       *begin.get_component<AudioPool>(4)
+  );
+}
+
+
+void EnemyGotShot_singl_handler(const EnemyGotShotEvent &event, ecs::QueryIterator &begin);
+
+ecs::SingleEventDescription<EnemyGotShotEvent> EnemyGotShot_singl_descr("EnemyGotShot", {
+  {ecs::get_type_description<ecs::EntityId>("eid"), false},
+  {ecs::get_type_description<float>("health"), false},
+  {ecs::get_type_description<GameData>("gameData"), false},
+  {ecs::get_type_description<AudioPool>("ap"), false},
+  {ecs::get_type_description<ecs::Tag>("enemy"), false}
+}, EnemyGotShot_singl_handler, (uint)(ecs::SystemTag::Game));
+
+void EnemyGotShot_singl_handler(const EnemyGotShotEvent &event, ecs::QueryIterator &begin)
+{
+  EnemyGotShot(
+    event,
+      *begin.get_component<ecs::EntityId>(0),
+      *begin.get_component<float>(1),
+      *begin.get_component<GameData>(2),
+      *begin.get_component<AudioPool>(3)
   );
 }
 

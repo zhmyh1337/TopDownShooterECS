@@ -7,6 +7,8 @@
 #include "constants.h"
 #include "game_data.h"
 #include "audio_pool.h"
+#include "game_logic.h"
+#include "particles_system.h"
 
 SYSTEM(ecs::SystemOrder::LOGIC - 2) SpawnEnemies(GameData& gameData, const Camera& camera)
 {
@@ -20,11 +22,12 @@ SYSTEM(ecs::SystemOrder::LOGIC - 2) SpawnEnemies(GameData& gameData, const Camer
         return;
     }
 
-    debug_log("Spawning an enemy");
+    const auto size = 0.8f + std::exponential_distribution<float>(3.0f)(Random::Get());
+    debug_log("Spawning an enemy with size %f", size);
     auto transformationMatrix = camera.transform.get_matrix() * glm::inverse(camera.projection);
     vec2 topLeftCorner = transformationMatrix * vec4(-1, 1, 1, 1);
     vec2 bottomRightCorner = transformationMatrix * vec4(1, -1, 1, 1);
-    constexpr glm::vec2 transformScale(1.5f);
+    const glm::vec2 transformScale(2.0f * size);
     const auto radius = glm::length(transformScale) / 2;
     topLeftCorner += vec2(-1, 1) * radius;
     bottomRightCorner += vec2(1, -1) * radius;
@@ -48,12 +51,14 @@ SYSTEM(ecs::SystemOrder::LOGIC - 2) SpawnEnemies(GameData& gameData, const Camer
         break;
     }
 
-    ecs::create_entity<Sprite, Transform2D, vec2, vec2, vec2, float, float, int, bool, ecs::Tag>(
+    ecs::create_entity<Sprite, Transform2D, vec2, vec2, vec2, float, float, float, float, int, bool, ecs::Tag>(
         {"sprite", {}},  
         {"transform", Transform2D(spawnPosition, transformScale)},
         {"roamingDestination", {}},
         {"velocity", {}},
         {"viewDirection", {}},
+        {"size", size},
+        {"health", size},
         {"firstStepTime", Time::time()},
         {"lastAttackTime", {}},
         {"attackState", -1},
@@ -61,7 +66,7 @@ SYSTEM(ecs::SystemOrder::LOGIC - 2) SpawnEnemies(GameData& gameData, const Camer
         {"enemy", {}}
     );
 
-    auto lambda = 2.0f + gameData.killsCount * 0.05f;
+    auto lambda = 3.0f + gameData.killsCount * 0.05f;
     std::exponential_distribution distribution(lambda);
     auto distributedValue = distribution(Random::Get());
     auto cooldownInSeconds = glm::clamp(distributedValue * 2.0f, 0.0f, 2.0f);
@@ -151,6 +156,29 @@ EVENT(ecs::Tag localPlayer) LocalPlayerReceiveDamage(const LocalPlayerReceiveDam
     }
 }
 
+EVENT(ecs::Tag enemy) EnemyGotShot(
+    const EnemyGotShotEvent& event, ecs::EntityId eid, float& health, GameData& gameData, AudioPool& ap)
+{
+    health -= consts::bullet::damage;
+    const auto isDamageLethal = health <= 0;
+    ap.bulletDamage.AddToPlaybackQueue(
+        static_cast<int>(SoundEffect::UniqueIds::EnemyTakesBulletDamageBegin) +
+            gameData.killsCount % 1'000'000,
+        event.hitPosition);
+    
+    ecs::send_event_immediate(eid, EntityEmitBloodEvent
+    {
+        .momentumVelocity = event.hitMomentumVelocity * 0.1f,
+        .isLethal = isDamageLethal
+    });
+    if (!isDamageLethal)
+    {
+        return;
+    }
+    ecs::destroy_entity(eid);
+    gameData.killsCount++;
+}
+
 template<typename Callable>
 void gatherAttackingEnemies(Callable);
 
@@ -164,7 +192,7 @@ SYSTEM(ecs::SystemOrder::LOGIC + 2, ecs::Tag localPlayer) EnemiesAttack(
 
     const auto& localPlayerTransform = transform;
     QUERY(ecs::Tag enemy) gatherAttackingEnemies([&localPlayerTransform, &ssp](
-        const Transform2D& transform, float& lastAttackTime, int& attackState, bool& canDamage)
+        const Transform2D& transform, const float size, float& lastAttackTime, int& attackState, bool& canDamage)
     {
         if (attackState != -1)
         {
@@ -183,7 +211,10 @@ SYSTEM(ecs::SystemOrder::LOGIC + 2, ecs::Tag localPlayer) EnemiesAttack(
         {
             if (distToPlayer < consts::enemy::meleeAttackDamageRange)
             {
-                ecs::send_event_immediate(LocalPlayerReceiveDamageEvent{ .damage = consts::enemy::damage });
+                ecs::send_event_immediate(LocalPlayerReceiveDamageEvent
+                {
+                    .damage = consts::enemy::damage * size,
+                });
             }
             canDamage = false;
         }

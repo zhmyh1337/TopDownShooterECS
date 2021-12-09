@@ -6,10 +6,12 @@ This is a small game I'm making as a part of my computer graphics course.
 * Camera zooming.
 * Dynamic difficulty (exponential distribution dependent on kill count).
 * Enemies always spawn outside of the camera.
+* Enemies vary in size, which affects health and damage.
 * Dead enemies leave behind blood particles that disappear over time.
 * Health, health bar and simple shader effect of taking damage.
 * Dynamic fog (Perlin noise).
-* Spatial sounds.
+* Spatial sound effects.
+* Primitive shadows.
 ## Peculiarities
 This was the first time I used an ECS framework, and the framework provided (I didn't write it) lacked some essential, in my opinion, ECS functionality. So my code, even though it used ECS stuff, can hardly be considered as such, it's more like procedural. Plus, it was written rather hastily, so there may be some messy places.
 ## Directories

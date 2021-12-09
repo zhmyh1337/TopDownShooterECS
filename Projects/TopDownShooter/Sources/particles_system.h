@@ -4,5 +4,6 @@
 
 struct EntityEmitBloodEvent
 {
-    vec2 momentumVelocity = vec2(0);
+    glm::vec2 momentumVelocity = glm::vec2(0);
+    bool isLethal = true;
 };
