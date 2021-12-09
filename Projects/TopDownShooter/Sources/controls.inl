@@ -60,12 +60,15 @@ SYSTEM(ecs::SystemOrder::LOGIC, ecs::Tag localPlayer) LocalPlayerViewToMouse(
     // spent about four hours doing this maths :)
     auto mouse = Input::get_mouse_position();
     auto mouseWorld = wr.screen_to_world(mouse.x, mouse.y);
-    viewDirection = glm::normalize(mouseWorld - transform.position);
+    auto mouseVector = glm::normalize(mouseWorld - transform.position);
     auto shoulderWorldDistance = glm::length(consts::sprites::soldier_rifle::shoulderPosition * transform.scale);
     auto mouseWorldDistance = glm::length(mouseWorld - transform.position);
-    auto gammaAngle = std::atan2(viewDirection.y, viewDirection.x);
+    auto gammaAngle = std::atan2(mouseVector.y, mouseVector.x);
     auto betaAngle = glm::acos(glm::clamp(shoulderWorldDistance / mouseWorldDistance, -1.0f, 1.0f));
     transform.rotation = gammaAngle - betaAngle + PIHALF;
+    viewDirection = glm::normalize(vec2(
+        transform.get_matrix() * vec4(consts::sprites::soldier_rifle::muzzlePosition, vec2(1)) -
+        transform.get_matrix() * vec4(consts::sprites::soldier_rifle::shoulderPosition, vec2(1))));
 }
 
 SYSTEM(ecs::SystemOrder::LOGIC + 3, ecs::Tag localPlayer) LocalPlayerShoot(

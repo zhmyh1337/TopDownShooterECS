@@ -1,6 +1,27 @@
 #include "render.inl"
 //Code-generator production
 
+ecs::QueryDescription getLocalPlayerRenderableInfo_descr("getLocalPlayerRenderableInfo", {
+  {ecs::get_type_description<glm::vec2>("viewDirection"), false},
+  {ecs::get_type_description<Transform2D>("transform"), false},
+  {ecs::get_type_description<float>("health"), false},
+  {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
+});
+
+template<typename Callable>
+void getLocalPlayerRenderableInfo(Callable lambda)
+{
+  for (ecs::QueryIterator begin = getLocalPlayerRenderableInfo_descr.begin(), end = getLocalPlayerRenderableInfo_descr.end(); begin != end; ++begin)
+  {
+    lambda(
+      *begin.get_component<glm::vec2>(0),
+      *begin.get_component<Transform2D>(1),
+      *begin.get_component<float>(2)
+    );
+  }
+}
+
+
 ecs::QueryDescription gatherSprites_descr("gatherSprites", {
   {ecs::get_type_description<Sprite>("sprite"), false},
   {ecs::get_type_description<Transform2D>("transform"), false},
@@ -18,40 +39,6 @@ void gatherSprites(Callable lambda)
       *begin.get_component<Transform2D>(1),
        begin.get_component<int>(2),
        begin.get_component<vec4>(3)
-    );
-  }
-}
-
-
-ecs::QueryDescription getLocalPlayerTransform_descr("getLocalPlayerTransform", {
-  {ecs::get_type_description<Transform2D>("transform"), false},
-  {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
-});
-
-template<typename Callable>
-void getLocalPlayerTransform(Callable lambda)
-{
-  for (ecs::QueryIterator begin = getLocalPlayerTransform_descr.begin(), end = getLocalPlayerTransform_descr.end(); begin != end; ++begin)
-  {
-    lambda(
-      *begin.get_component<Transform2D>(0)
-    );
-  }
-}
-
-
-ecs::QueryDescription getLocalPlayerHealth_descr("getLocalPlayerHealth", {
-  {ecs::get_type_description<float>("health"), false},
-  {ecs::get_type_description<ecs::Tag>("localPlayer"), false}
-});
-
-template<typename Callable>
-void getLocalPlayerHealth(Callable lambda)
-{
-  for (ecs::QueryIterator begin = getLocalPlayerHealth_descr.begin(), end = getLocalPlayerHealth_descr.end(); begin != end; ++begin)
-  {
-    lambda(
-      *begin.get_component<float>(0)
     );
   }
 }

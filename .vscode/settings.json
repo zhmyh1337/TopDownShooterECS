@@ -95,7 +95,9 @@
     "forward_list": "cpp",
     "unordered_set": "cpp",
     "format": "cpp",
-    "stop_token": "cpp"
+    "stop_token": "cpp",
+    "ranges": "cpp",
+    "span": "cpp"
   },
   "launchOption.options": {
     "Project": [ "TopDownShooter", ],

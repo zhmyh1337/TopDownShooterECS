@@ -79,10 +79,8 @@ void UpdateEnemySprite_func();
 
 ecs::SystemDescription UpdateEnemySprite_descr("UpdateEnemySprite", {
   {ecs::get_type_description<Sprite>("sprite"), false},
-  {ecs::get_type_description<Transform2D>("transform"), false},
   {ecs::get_type_description<vec2>("velocity"), false},
   {ecs::get_type_description<SpriteSheetsPool>("ssp"), false},
-  {ecs::get_type_description<ecs::EntityId>("eid"), false},
   {ecs::get_type_description<float>("firstStepTime"), false},
   {ecs::get_type_description<int>("attackState"), false},
   {ecs::get_type_description<ecs::Tag>("enemy"), false}
@@ -94,12 +92,10 @@ void UpdateEnemySprite_func()
   {
     UpdateEnemySprite(
       *begin.get_component<Sprite>(0),
-      *begin.get_component<Transform2D>(1),
-      *begin.get_component<vec2>(2),
-      *begin.get_component<SpriteSheetsPool>(3),
-      *begin.get_component<ecs::EntityId>(4),
-      *begin.get_component<float>(5),
-      *begin.get_component<int>(6)
+      *begin.get_component<vec2>(1),
+      *begin.get_component<SpriteSheetsPool>(2),
+      *begin.get_component<float>(3),
+      *begin.get_component<int>(4)
     );
   }
 }

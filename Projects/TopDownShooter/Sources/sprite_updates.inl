@@ -89,8 +89,8 @@ SYSTEM(ecs::SystemOrder::LOGIC + 4, ecs::Tag soldier) UpdateSoldierParts(
 }
 
 SYSTEM(ecs::SystemOrder::LOGIC + 4, ecs::Tag enemy) UpdateEnemySprite(
-    Sprite& sprite, const Transform2D& transform, const vec2& velocity, const SpriteSheetsPool& ssp,
-    ecs::EntityId eid, const float firstStepTime, int attackState)
+    Sprite& sprite, const vec2& velocity, const SpriteSheetsPool& ssp,
+    const float firstStepTime, int attackState)
 {
     if (attackState != -1)
     {

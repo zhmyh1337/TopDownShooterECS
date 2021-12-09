@@ -16,13 +16,6 @@ void main()
 
 #pixel_shader
 
-in vec2 world;
-out vec4 fragmentColor;
-
-uniform float time;
-uniform vec2 localPlayerPosition;
-uniform float visibleDistance;
-
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
 vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
 vec3 fade(vec3 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
@@ -96,6 +89,26 @@ float perlinNoise(vec3 P)
   return 2.2 * n_xyz;
 }
 
+in vec2 world;
+out vec4 outColor;
+
+uniform float time;
+uniform float visibleDistance;
+
+uniform vec2 viewDirection;
+uniform vec2 localPlayerPosition;
+uniform vec2 flashlightPosition;
+uniform float fullDarknessLevel;
+uniform float fov;
+
+void SetPrimitiveShadows()
+{
+    const vec2 vecFromFlashlight = world - flashlightPosition;
+    const vec2 vecFromFlashlightNormalized = normalize(vecFromFlashlight);
+    const float angle = acos(clamp(dot(viewDirection, vecFromFlashlightNormalized), -1, 1));
+    outColor.rgb *= 1 - (1 - fullDarknessLevel) * smoothstep(fov, fov + fov * 0.2, angle);
+}
+
 void main()
 {
     const int octavesCount = 3;
@@ -113,5 +126,6 @@ void main()
     }
 
     const float dist = dot(localPlayerPosition - world, localPlayerPosition - world);
-    fragmentColor = vec4(vec3(0.5), (noise + 1) * clamp(dist / (visibleDistance * visibleDistance), 0, 1));
+    outColor = vec4(vec3(0.5), (noise + 1) * clamp(dist / (visibleDistance * visibleDistance), 0, 1));
+    SetPrimitiveShadows();
 }

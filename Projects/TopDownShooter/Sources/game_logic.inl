@@ -61,7 +61,7 @@ SYSTEM(ecs::SystemOrder::LOGIC - 2) SpawnEnemies(GameData& gameData, const Camer
         {"enemy", {}}
     );
 
-    auto lambda = 1.5f + gameData.killsCount * 0.05f;
+    auto lambda = 2.0f + gameData.killsCount * 0.05f;
     std::exponential_distribution distribution(lambda);
     auto distributedValue = distribution(Random::Get());
     auto cooldownInSeconds = glm::clamp(distributedValue * 2.0f, 0.0f, 2.0f);

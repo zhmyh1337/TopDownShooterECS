@@ -23,8 +23,9 @@ static void InitCamera(WorldRenderer &wr, Camera& camera)
 
 static void InitEntities(const SpritesPool &sp)
 {
-    ecs::create_entity<Sprite, Transform2D, int, ecs::Tag>(
+    ecs::create_entity<Sprite, vec4, Transform2D, int, ecs::Tag>(
         {"sprite", sp.background},
+        {"color", vec4(vec3(0.5f, 0.7f, 0.5f), 1)},
         {"transform", {}},
         {"renderOrder", -9},
         {"background", {}}
