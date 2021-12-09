@@ -1,6 +1,6 @@
-# ECS Top-down Shooter (still in progress)
+# ECS Top-down Shooter
 ## Description
-This is a small game I'm making as a part of my computer graphics course.
+This is a small game I made as a part of my computer graphics course.
 ## Some of the features
 * Infinite (but empty 🙂) world.
 * Camera zooming.
